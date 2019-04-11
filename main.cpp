@@ -163,6 +163,7 @@ uchar* barycenter(vector<uchar*> ims, vector<double> alpha, int W, int H, double
 	gauss_filter(W, filter_row, gamma);
 	double *conv = new double[size];
 	double *mu = new double[size];
+	double *mu2 = new double[size];
 
 	for(int i = 0; i < num_it; i++) {
 		for(int j = 0; j < size; j++)
@@ -193,21 +194,31 @@ uchar* barycenter(vector<uchar*> ims, vector<double> alpha, int W, int H, double
 			#pragma omp parallel for
 			for(int l = 0; l < size; l++)
 				avs[j][l] *= mu[l] / ds[j][l];
+
+		if(W > 100 && i == num_it - 2)
+			for(int j = 0; j < size; j++)
+				mu2[j] = mu[j];
+		if(W > 100 && i == num_it - 1) {
+			double sum = 0;
+			for(int i = 0; i < size; i++)
+				sum += abs(mu[i] - mu2[i]), mu2[i] = mu[i];
+			if(sum > 66) num_it ++;
+			cout << sum << endl;
+		}
 	}
 
 	uchar* res = new uchar[size];
 	double scale = 0;
 	for(int i = 0; i < k; i++)
 		scale += alpha[i] * scales[i];
-	for(int i = 0; i < size; i++) {
+	for(int i = 0; i < size; i++)
 		res[i] = min(255.0, mu[i] / scale);
-	}
 	return res;
 }
 
 int main() {
-	ifstream file_im("train_images");
-	ifstream file_lab("train_labels");
+	ifstream file_im("ims/train_images");
+	ifstream file_lab("ims/train_labels");
 
 	read_int(file_im);
 	int num_images = read_int(file_im);
@@ -247,8 +258,8 @@ int main() {
 	delete[] w;
 
 	int C;
-	vector<uchar*> ims = {stbi_load("circle.png", &W, &H, &C, 1), stbi_load("circle_2.png", &W, &H, &C, 1),
-						stbi_load("spiral.png", &W, &H, &C, 1), stbi_load("star.png", &W, &H, &C, 1)};
+	vector<uchar*> ims = {stbi_load("ims/circle.png", &W, &H, &C, 1), stbi_load("ims/circle_2.png", &W, &H, &C, 1),
+						stbi_load("ims/spiral.png", &W, &H, &C, 1), stbi_load("ims/star.png", &W, &H, &C, 1)};
 	for(uchar* im : ims)
 		for(int i = 0; i < W*H; i++)
 			im[i] = 255 - im[i];
@@ -276,8 +287,8 @@ int main() {
 	for(uchar* im : ims) free(im);
 	delete[] big;
 
-	im0 = stbi_load("eight.png", &W, &H, &C, 3);
-	im1 = stbi_load("nine.png", &W, &H, &C, 3);
+	im0 = stbi_load("ims/eight.png", &W, &H, &C, 3);
+	im1 = stbi_load("ims/nine.png", &W, &H, &C, 3);
 	ims.clear();
 	for(int c = 0; c < 3; c++) {
 		uchar *im = new uchar[W*H];
@@ -294,7 +305,7 @@ int main() {
 		double j = (double) i / (double) N;
 		uchar* res = new uchar[3*W*H];
 		for(int c = 0; c < 3; c++) {
-			uchar* bar = barycenter({ims[2*c], ims[2*c+1]}, {j, 1-j}, W, H, 1.45, 22);
+			uchar* bar = barycenter({ims[2*c], ims[2*c+1]}, {j, 1-j}, W, H, 3.0, 15);
 			for(int j = 0; j < W*H; j++)
 				res[3*j+c] = (255.0 - bar[j]) / 1.28;
 			delete[] bar;

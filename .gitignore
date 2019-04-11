@@ -1,6 +1,7 @@
-*.png
+bar*.png
+big.png
 main
 build
 .vscode
-train*
+ims/train*
 test
