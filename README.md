@@ -1,9 +1,16 @@
 # Convolutional Wasserstein Distance Implementation
 
-You need to download the train image dataset of the MNIST database on the website [http://yann.lecun.com/exdb/mnist/](http://yann.lecun.com/exdb/mnist/). Then rename the bytes files downloaded into `train_images` and `train_labels` and place them in the `ims` folder.
+You need to download the train image dataset of the MNIST database [http://yann.lecun.com/exdb/mnist/](http://yann.lecun.com/exdb/mnist/). To do so, run the script [get_mnist.sh](get_mnist.sh) which will download and rename files correctly.
 
-To compile and run the code, just run:
+To compile the code you can use the makefile
 ```
 make
-./main
+```
+Then you can generate the wasserstein kernel by typing:
+```
+./main > kernel.txt
+```
+Next you can try this kernel on a SVM in python with:
+```
+python3 test.py
 ```

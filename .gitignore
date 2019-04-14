@@ -1,7 +1,8 @@
-bar*.png
-big.png
+res
 main
 build
 .vscode
 ims/train*
 test
+temp.cpp2
+kernel.txt

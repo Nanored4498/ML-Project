@@ -3,6 +3,8 @@ EXEC=main
 FLAGS=-Wall -O3 -fopenmp
 LINK=
 
+RES_FOLDER=res
+
 BUILD_FOLDER=build
 SRC_C=$(wildcard *.c)
 OBJ_C=$(patsubst %.c, $(BUILD_FOLDER)/%.o, $(SRC_C))
@@ -14,12 +16,13 @@ DEB=$(DEBUG_FOLDER)/main
 DEB_C=$(patsubst %.c, $(DEBUG_FOLDER)/%.o, $(SRC_C))
 DEB_CPP=$(patsubst %.cpp, $(DEBUG_FOLDER)/%.opp, $(SRC_CPP))
 
-all: $(BUILD_FOLDER) $(EXEC)
-
-g: $(BUILD_FOLDER) $(GUI)
+all: $(BUILD_FOLDER) $(EXEC) $(RES_FOLDER)
 
 $(BUILD_FOLDER):
 	mkdir $(BUILD_FOLDER)
+
+$(RES_FOLDER):
+	mkdir $(RES_FOLDER)
 
 $(EXEC): $(OBJ_C) $(OBJ_CPP)
 	g++ $(FLAGS) $^ -o $@ $(LINK)
