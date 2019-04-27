@@ -8,9 +8,9 @@ make
 ```
 Then you can generate the wasserstein kernel by typing:
 ```
-./main > kernel.txt
+./main wass > kernel.txt
 ```
 Next you can try this kernel on a SVM in python with:
 ```
-python3 test.py
+python3 learning.py < kernel.txt
 ```
