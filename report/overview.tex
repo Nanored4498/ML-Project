@@ -285,3 +285,70 @@ En posant le noyau :
 $$ K_\gamma(i, j) = \exp \left( - \dfrac{d_{i, j}}{\gamma} \right) $$
 On obtient une reformulation de la régularisation entropique avec la divergence KL :
 $$ W_\gamma(\mu, \nu) = \min_{P \in U(a, b)} \gamma KL(P | K_\gamma) $$
+
+\sect{Optimal Transport and Machine Learning}
+
+\subs{Compute the optimal transport of what?}
+
+Since Sinkhorn can be parallelized, one can compute a large amount of Optimal
+Transport distances: for instance look into a database for similarity based
+retrieval, blablabla
+
+\paragraph{Color histograms}
+
+For image retrieval blablabla...
+
+\paragraph{Cloud of word}
+
+For similar documents retrieval blabla
+
+\subs{Wassersteinization}
+
+Introduce Wasserstein distance into optimizations problem.
+
+We show that we can computationaly differentiate, and therefore we can deal
+with it in a variety of optimization problem, including machine learning
+related opt. problems. 
+
+Somehow revisiting machine learning problems.
+
+\paragraph{Averaging data}
+
+histograms, distribution, images, experiments (repetition of same expriment,
+MEG mesures, average over the experiments might be relevant)
+
+\paragraph{Aggregating distributions}
+
+From a very big dataset, split it in $J$ parts, learn the distribution (eg. w/
+Bayesaian Learning) from each of the part in parralel (on $J$ machines):
+the $J$ distributions should not be very different, but still the variance in
+the data will cause some variation: the idea is to use Wasserstein averaging
+to aggregate the distributions, and get a more meaningful one. Theoretic
+guaranties! :D
+
+Wasserstein posterior
+
+%\subs{Semi-suppervised learning setting}
+
+\paragraph{Semi-supervised learning setting}
+
+Wasserstein propagation: smooth a graph $(V,E)$ where an histogram is associated
+$\mu_v$ to each vertex $v$, with a susbset $S$ of the vertices that have a
+fixed histogram (known data).
+
+Solve the following optimization problem.
+
+$$
+    \underset{\substack{\mu_i \in \mathcal{P}\left(\Omega\right) \\ \text{for }i \in V\setminus S}}\min \sum_{(e_1, e_2) \in E} W_2^2\left(\mu_{e_1}, \mu_{e_2}\right)
+$$
+
+blabla
+
+\paragraph{omg dictionnary learning what is this????????? :oooooo}
+
+\subs{Wasserstein PCA, Geodesics and Inverse problem}
+
+Since the space of distributions with the OT geometry has negative curvature,
+we generalize the PCA (ie. projecting on one dimension spaces) into Generalized
+Principal Geodesics. We then want to explain stuff out of what we found;
+eg. affaire Bonneel vs nounours
