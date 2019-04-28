@@ -5,3 +5,13 @@ build
 ims/train*
 test
 .d
+*.log
+*.aux
+*.maf
+*.mtc*
+*.out
+*.gz
+*.thm
+*.toc
+*.blg
+*.bbl
