@@ -2,11 +2,12 @@
 
 \myminitoc
 
-Le transport optimal permet de définir une géométrie et une distance sur l'ensemble des mesures de probabilités sur un espace.
+Optimal transport aims to define a geometry and a distance on the set of
+mesures of probability on a space.
 
 \sect{Introduction}
 
-\subs{Problème de Monge}
+\subs{\textsc{Monge}'s Problem}
 
 \begin{center}
 	\begin{tikzpicture}[>=stealth']
@@ -33,16 +34,30 @@ Le transport optimal permet de définir une géométrie et une distance sur l'en
 \end{center}
 
 \paragraph{Monge}
-On se place dans un espace de probabilité $\Omega$. Puis on se donne $\mu$ et $\nu$, deux mesures de probabilités sur $\mathcal{P}(\Omega)$. De plus on se donne une fonction de coût $c : \Omega \times \Omega \rightarrow \R$. Cette fonction peut être la distance euclidienne par exemple. Le problème de Monge est alors le suivant :
+
+We work on a space of probability $\Omega$. We consider two mesures of
+probability $\mu$ and $\nu$ on $\mathcal{P}(\Omega)$. We also consider a cost function
+$c : \Omega \times \Omega \rightarrow \R$. This function can for instance be the Euclidean distance. Monge's problem is therefore the following
+
 $$ \int_{\Omega} c \left( x, T(x) \right) \mu(x) $$
 \vspace{-2mm}
 $$ \text{s.t.} \quad \forall A \in \mathcal{P}(\Omega), \, \nu(A) = \mu \left( T^{-1}(A) \right) $$
-La fonction $T$ est appelé un plan de transport. Elle indique où est déplacé chaque morceau de masse. La masse qui se trouve en $x$ est déplacé à la position $T(x)$. La fonction $c$ permet alors de quantifier le coût du déplacement d'une unité de masse. On cherche alors à minimiser la distance moyenne de déplacement d'une unité de masse en transport optimal. 
+
+The function $T$ is called a transport map. It carries the information
+regarding the displacement of each elementary unit of probability: the mass
+located in $x$ is moved toward $T(x)$. The function $c$ thus allows to
+quantify the cost of the displacement of one elementary unit of mass. We
+want to minimize the average distance travelled by mass units during the
+optimal transport.
 
 \paragraph{Limitations}
-Le problème de cette formulation est qu'elle n'est pas utilisable sur des mesures discrètes. En effet si $\mu$ possède un Dirac plus grand que tous les Diracs de $\nu$ alors la construction d'un plan de transport devient impossible.
 
-\subs{Problème de Kantorovich}
+The issue with this formulation of an optimal transport problem is that it
+doesn't handle discrete probability mesures. Indeed, if $\mu$ has a Dirac
+impulse bigger than every Dirac impulse of $\nu$, then the transport map
+cannot be build.
+
+\subs{Kantorovich's problem}
 
 \begin{center}
 	\begin{tikzpicture}[>={latex}, scale=1.2]
@@ -67,7 +82,14 @@ Le problème de cette formulation est qu'elle n'est pas utilisable sur des mesur
 \end{center}
 
 \paragraph{Changement de plan de transport}
-L'idée de Kantorovich a été de changer la fonction $T : \Omega \rightarrow \Omega$ en une probabilité $P$ sur l'espace produit $\mathcal{P}(\Omega \times \Omega)$. Sur l'exemple ci-dessus, la formulation de Monge nous interdit de séparé la masse de taille 150 en deux. Avec la formulation de Kantorovich on peut faire cela et ici une masse de taille 90 va a un endroit et une masse de taille 60 à un autre endroit. Dans le cas discret $P$ peut être représenté par une matrice :
+\paragraph{Change of transport plan}
+The idea of Kantorovich is to change the function $T : \Omega \rightarrow
+\Omega$ into a probability $P$ on the product space $\mathcal{P}(\Omega \times
+\Omega)$. On the upper example, Monge's formulation forbids to separate the
+masse of size 150 into two separate masses. With Kantorovich's formulation,
+this operation is accessible: the mass of $150$ is splitted into a mass of
+$90$ and a mass of $60$, both sent to different places. In the discrete
+case, we can represent what happens with a matrix.
 
 \begin{center}
 	\begin{tikzpicture}
@@ -82,7 +104,7 @@ L'idée de Kantorovich a été de changer la fonction $T : \Omega \rightarrow \O
 		\node at (1.5, 2.5) {\Large $p_{{\color{red}1}{\color{blue}B}}$};
 		\node at (2.5, 2.5) {\Large $p_{{\color{red}1}{\color{blue}C}}$};
 		
-		\node at (1.5, 3.5) {\large Matrice de Transport};
+		\node at (1.5, 3.5) {\large Transport Map};
 		\node[blue] at (0.5, -0.5) {\Large 120};
 		\node[blue] at (1.5, -0.5) {\Large 90};
 		\node[blue] at (2.5, -0.5) {\Large 90};
@@ -90,7 +112,7 @@ L'idée de Kantorovich a été de changer la fonction $T : \Omega \rightarrow \O
 		\node[red] at (-0.5, 1.5) {\Large 90};
 		\node[red] at (-0.5, 2.5) {\Large 150};
 		
-		\node at (7.5, 3.5) {\large Matrice des Distances};
+		\node at (7.5, 3.5) {\large Distance matrix};
 		\draw[step=1, thick] (6, 0) grid (9, 3);
 		\node at (6.5, 0.5) {\Large $d_{{\color{red}3}{\color{blue}A}}$};
 		\node at (7.5, 0.5) {\Large $d_{{\color{red}3}{\color{blue}B}}$};
@@ -104,8 +126,10 @@ L'idée de Kantorovich a été de changer la fonction $T : \Omega \rightarrow \O
 	\end{tikzpicture}
 \end{center}
 
-\paragraph{Cas discret}
-En notant $D$ notre matrice des distances, on obtient la formulation suivante dans le cas discret :
+\paragraph{Discrete Case}
+
+If we note $D$ our disance matrix, we obtain the following formulation in the discrete case:
+
 $$ \min_P \langle P, D \rangle = \sum_i \sum_j p_{ij} d_{ij} $$
 \vspace{-4mm}
 $$ \text{s.t.} \quad \left\{ \begin{array}{ll}
@@ -113,23 +137,37 @@ $$ \text{s.t.} \quad \left\{ \begin{array}{ll}
 \forall j & \sum_i p_{ij} = \nu_j
 \end{array} \right. $$
 
-\paragraph{Cas continue}
-Dans le cas continue on introduit l'ensemble des probabilités conjointes suivant :
+\paragraph{Continuous Case}
+
+In the continuous setting, we introduce the following set of joint probabilities:
+
 $$ \Pi(\mu, \nu) = \left\{ P \in \mathcal{P}(\Omega \times \Omega)~|~\forall A, B \in \Omega, \, P(A \times \Omega) = \mu(A), \, P(\Omega \times B) = \nu(B) \right\} $$
-Cet ensemble traduit les conditions du cas discret dans le cas continue. On reprend notre fonction de coût $c$ définie dans le problème de Monge. La formulation de Kantorovich devient le problème de minimisation suivant :
+
+This set encodes the conditions of the discrete case but in the very
+continuous setting. We consider once again our cost function $c$ defined
+in the Monge's problem. Kantorovich's formulation now becomes the following
+optimization problem:
+
 $$ \inf_{P \in \Pi(\mu, \nu)} \E_P \left[ c(X, Y) \right] = \int \int c(x, y) P(dx, dy) $$
+\subs{Wasserstein distance}
 
-\subs{Distance de Wasserstein}
-
-Ce problème d'optimisation permet de définir une distance entre les mesures de probabilités.
+This optimization problem allows us to define a distance between probability mesures:
 
 \DEF{
-	Étant donnée un espace de probabilité $\Omega$, une fonction de coût $c : \Omega \times \Omega \rightarrow \R$ et deux mesures de probabilités $\mu$ et $\nu$ dans $\mathcal{P}(\Omega)$, la \textbf{p-distance de Wasserstein} entre $\mu$ et $\nu$ est définie par :
-	$$ W_p(\mu, \nu) = \left( \inf_{P \in \Pi(\mu, \nu)} \int \int c(x, y)^p P(dx, dy) \right)^{1 / p} $$
+    Given a probability space $\Omega$, a cost function $c : \Omega \times
+    \Omega \rightarrow \R$ and two probabilitiy mesures $\mu$ and $\nu$ in
+    $\mathcal{P}(\Omega)$, the \textbf{p-Wasserstein-distance} between $\mu$
+    and $\nu$ is defined by :
+	$$ W_p(\mu, \nu) = \left( \inf_{P \in \Pi(\mu, \nu)} \int \int c(x,
+	y)^p P(dx, dy) \right)^{1 / p} $$
 	\vspace{-3mm}
 }
 
-Cette distance peut permettre de calculer des barycentres entres des distributions de probabilité beaucoup plus naturels que des barycentres obtenus avec la norme $l_2$. La figure suivante nous montre la différence entre une interpolation (barycentre de deux distributions) obtenue via la distance de Wasserstein et une interpolation linéaire.
+This distance allows to compute barycenters between several probability
+distributions, and obtain results that are way more natural than barycenters
+obtained with other norms, like $l_2$ for instance. The following
+figure compares an interpolation (progressive weighted barycenter of two
+distributions) obtained via Wasserstein-distance and a linear interpolation.
 
 \begin{center}
 	\begin{tikzpicture}[scale=0.85]
@@ -151,47 +189,61 @@ Cette distance peut permettre de calculer des barycentres entres des distributio
 	\end{tikzpicture}
 \end{center}
 
-On rappelle que le calcul du barycentre $\mu$ des des $N$ distributions $\nu_i$ associé aux poids $\lambda_i$ revient au problème de minimisation suivant :
+We recall that the computation of the barycenter $\mu$ of the $N$ distributions
+$\nu_i$ associated to the weights $\lambda_i$ boils down to the following
+minimization problem.
 $$ \min_{\mu \in \mathcal{P}(\Omega)} \sum_{i=1}^N \lambda_i W_p^p(\mu, \nu_i) $$
-Et voici maintenant ce que donne des barycentres avec 4 distributions :
+Now observe what the barycenter looks like with $4$ distributions:
 \begin{center}
 	\includegraphics[scale=0.4]{wasserstein_bar.png}
 \end{center}
 
-\sect{Comment calculer le transport optimal ?}
+\sect{How to compute Optimal Transport?}
 
-\subs{Dual}
+\subs{Duality}
 
-Pour les calculs on revient vers les espaces discrets. Nos mesures de probabilité sont des sommes de diracs :
+To do the computations, we embrace the setting of discrete spaces. Our
+probability mesures are sum of diracs impulses:
+
 $$ \mu = \sum_{i=1}^n a_i \delta_{x_i} \qquad \nu = \sum_{j =1}^m b_j \delta_{y_j} $$
-Notre fonction de coût est une matrice $D \in \R_+^{n \times m}$ tel que $D_{ij} = d(x_i, y_j)^p$. Notre distribution conjointe $P$ est aussi une matrice de $\R_+^{n \times m}$ qui doit vérifier certaines contraintes pouvant se représenter de manière matricielle. L'ensemble dans lequel se trouve $P$ est le suivant :
+Our cost function is a matrix $D \in \R_+^{n \times m}$ such that $D_{ij} = d(x_i, y_j)^p$. Our joint distribution $P$ is also a matrix of $\R_+^{n \times m}$ that has to satisfy several constraints that can be represented matricially. The set which $P$ belongs to is:
+
 $$ U(a, b) = \left\{ P \in \R_+^{n \times m}~|~P \mathbbm{1}_m = a, \, P^\trans \mathbbm{1}_n = b \right\} $$
 
 \DEF{
-	La définition de la distance de Wasserstein dans un espace discret est la suivante :
+    The Wasserstein distance in a discrete space is defined as:
 	$$ W_p^p(\mu, \nu) = \min_{P \in U(a, b)} \langle P, D \rangle $$
 	\vspace{-6mm}
 }
 
-\paragraph{Dual} On s'intéresse maintenant au problème dual. On introduit le lagrangien :
+\paragraph{Dual} We now focus on the dual problem. For this we introduce the lagrangian.
+
 $$ L(P, \alpha, \beta) = \langle P, D \rangle + \alpha^\trans (a - P \mathbbm{1}_m) + \beta^\trans (b - P^\trans \mathbbm{1}_n) $$
-La fonction objective du dual est :
+The objective function of the dual is:
 $$ g(\alpha, \beta) = \min_{P \geqslant 0} L(P, \alpha, \beta) = \min_{P \geqslant 0} \alpha^\trans a + \beta^\trans b + \langle P, D - \alpha \mathbbm{1}_m^\trans - \mathbbm{1}_n \beta^\trans \rangle $$
-Si la matrice $D - \alpha \mathbbm{1}_m^\trans - \mathbbm{1}_n \beta^\trans$ possède un coefficient négatif alors en faisant tendre le même coefficient de la matrice $P$ vers $+\infty$ on obtient pour minimum $-\infty$. En revanche si tous les coefficients sont positifs alors $\langle P, D - \alpha \mathbbm{1}_m^\trans - \mathbbm{1}_n \beta^\trans \rangle$ est positif et il suffit de prendre $P=0$ pour se retrouver avec une valeur nulle. On obtient alors :
+If the matrix $D - \alpha \mathbbm{1}_m^\trans - \mathbbm{1}_n \beta^\trans$ has a negative coefficient, then by having this coefficient grow toward $+\infty$ we obtain a minimum of $-\infty$. But if all the coefficients are non negative, then  $\langle P, D - \alpha
+\mathbbm{1}_m^\trans - \mathbbm{1}_n \beta^\trans \rangle$ is non negative and we just have to take $P=0$ to obtain a non zero value. We therefore obtain:
 $$ g(\alpha, \beta) = \left\{ \begin{array}{ll}
 \alpha^\trans a + \beta^\trans b & \text{si } D - \alpha \mathbbm{1}_m^\trans - \mathbbm{1}_n \beta^\trans \geqslant 0 \\
 -\infty & \text{sinon}
 \end{array}\right. $$
-Finalement le dual est la maximisation de cette fonction $g$.
+
+Finally, the dual problem is the maximization of this function $g$.
 
 \DEF{
-	Le \textbf{dual} du transport optimal a la formulation suivante :
+	The \textbf{dual} of the optimal transport problem is:
 	$$ W_p^p(\mu, \nu) = \max_{\alpha \in \R^n, \, \beta \in \R^m \atop \alpha_i + \beta_j \leqslant D(x_i, y_j)^p} \alpha^\trans a + \beta^\trans b $$
 	\vspace{-5mm}
 }
 
-Avec un solveur de flot de coût minimum on peut résoudre cette optimisation linéaire en temps $\mathcal{O}(n^3 \log (n))$. Mais la solution est instable. Comme illustré sur la figure ci-dessous. Si on change un peu notre distance $D$ ou si on modifie un peu nos mesures source et destination $\mu$ et $\nu$ la valeur de $P$ peut subir un changement brutal puisque $P$ est un sommet de notre simplex. Une solution consiste à faire une régularisation de notre problème pour se retrouver avec un ensemble $U_\alpha(a, b)$ strictement convexe. Cet ensemble est strictement inclus dans $U(a, b)$ et la solution optimale de ce nouveau problème ne sera plus optimal pour le problème initial mais sera tout de même correcte. Finalement la régularisation que l'on va voire permet aussi d'obtenir un algorithme de résolution itératif de moindre complexité.
-
+Using a minimum flow solver, we can solve this linear optimization problem in
+$\mathcal{O}(n^3 \log (n))$. But the solution is not stable, as illustrated
+on the following figure. If we slightly move our distance $D$ or if we change
+the source and destination mesures, the value of $P$ can drastically change,
+since $P$ is a vertex of our simplex. One solution is to regularize the problem to fall back on a set $U_\alpha(a, b)$
+strictly convex. This set is strictly contained in $U(a, b)$ and the optimal solution of this new problem won't be optimal for the initial problem, but will remain valid.
+Finally, the regularization that we will describe allows to obtain an
+interative algorithm of small complexity.
 \begin{center}
 	\begin{tikzpicture}[scale=20, >={latex}]
 		\clip (0.2, -0.01) rectangle (0.51, 0.2);
@@ -210,43 +262,51 @@ Avec un solveur de flot de coût minimum on peut résoudre cette optimisation li
 	\end{tikzpicture}
 \end{center}
 
-\subs{Régularisation}
+\subs{Regularization}
 
-La régularisation que l'on effectue consiste à maximiser l'entropie de probabilité conjointe $P$. On fait apparaître un nouveau paramètre $\gamma$ qui contrôle cette régularisation et on obtient la distance suivante :
+The regularization that we choose consist in maximizing the entropy of the
+joint-probability $P$. We exhibit a new parameter $\gamma$ that controls
+the regularization and we obtain the following distance:
 
 \DEF{
-	La \textbf{distance de Wasserstein régularisée} est définie de la manière suivante :
+	The \textbf{regularized Wasserstein distance} is defined as follows:
 	$$ W_\gamma(\mu, \nu) = \min_{P \in U(a, b)} \langle P, D \rangle - \gamma H(P) $$
 	\vspace{-5mm}
 } 
 
-\paragraph{Remarque}
-On rappelle que l'on peut considérer deux variables aléatoires $X$ et $Y$ tel que $X \sim \mu$, $Y \sim \nu$ et $X, Y \sim P$. L'entropie de $P$ est maximale lorsque $X$ et $Y$ sont indépendants, c'est à dire lorsque $P = ab^\trans$ et l'entropie maximal est alors $H(\mu) + H(\nu)$. La régularisation donne donc une matrice avec des valeurs strictement positive plus réparties.
+\paragraph{Remark}
+Recall that we can consider two random variables $X$ and $Y$ such that $X \sim \mu$, $Y \sim \nu$ and $X,Y \sim P$. The entropy of $P$ is maximum when $X$ and $Y$ are independant, \emph{ie.} when $P = ab^\trans$ and this maximum entropy is thus $H(\mu) + H(\nu)$. 
+The regularization therefore gives a matrix whose positive values are more
+distributed.
 
 \begin{center}
 	\includegraphics[scale=0.25]{reg_wass.png}
 \end{center}
 
-Par stricte convexité, il existe une unique matrice $P_\gamma$ qui minimise la distance :
+By strict convexity, there exist a unique matrix $P_\gamma$ that minimizes the distance:
 $$ P_\gamma = \argmin_{P \in U(a, b)} \langle P, D \rangle - \gamma H(P) $$
 
 \PROP{
-	Il existe un unique couple de vecteurs $u$ et $v$ appartenant à $\R_+^n$ et $\R_+^m$ tel que :
+    There exist a unique couple of vectors $u$ and $v$ belonging to
+    $\R_+^n$ and $\R_+^m$ such that :
 	$$ P_\gamma = \text{diag}(u) K \text{diag}(v), \qquad K = e^{-D / \gamma} $$
 	\vspace{-6mm}
 }
 
 \dem
-On écrit le nouveau laplacien :
+
+We write the new laplacian:
+
 $$ L(P, \alpha, \beta) = \sum_{ij} \left( P_{ij} D_{ij} + \gamma P_{ij} \left( \log_2 P_{ij} - 1 \right) \right) + \alpha^\trans (a - P \mathbbm{1}_m) + \beta^\trans (b - P^\trans \mathbbm{1}_n) $$
-On calcule alors la dérivée partielle par rapport à $P_{ij}$ :
+We compute the partial derivative with respect to $P_{ij}$:
 $$ \dfrac{\partial L}{\partial P_{ij}} = M_{ij} + \gamma \log_2 P_{ij} - \alpha_i - \beta_j $$
-Le dual est la maximisation du minimum du laplacien par rapport à $P$. Donc on doit avoir $P$ tel que la dérivée partielle est nulle :
+The dual is the maximization of the minimum of the laplacian with respect
+to $P$. We must look for $P$ such that the partial derivative is equal to zero:
 $$ \dfrac{\partial L}{\partial P_{ij}} = 0 \Rightarrow P_{ij} = e^{\frac{\alpha_i}{\gamma}} e^{-\frac{D_{ij}}{\gamma}}  e^{\frac{\beta_j}{\gamma}} = u_i K_{ij} v_j $$
 \findem
 
 \paragraph{Sinkhorn}
-On dispose alors d'une méthode itérative pour trouver cette matrice $P_\gamma$. On traduit la condition $P_\gamma \in U(a, b)$ :
+We have at our disposition an interative method to find this matrix $P_\gamma$. We use the condition $P_\gamma \in U(a,b)$:
 $$ P_\gamma \in U(a, b) \Leftrightarrow \left\{ \begin{array}{lrr}
 \text{diag}(u) K \text{diag}(v) \mathbbm{1}_m & = & a \\
 \text{diag}(v) K^\trans \text{diag}(u) \mathbbm{1}_n & = & b
@@ -255,7 +315,7 @@ $$ P_\gamma \in U(a, b) \Leftrightarrow \left\{ \begin{array}{lrr}
 \text{diag}(u) K v & = & a \\
 \text{diag}(v) K^\trans u & = & b
 \end{array} \right. $$
-On introduit alors $\odot$ le produit coefficient par coefficient :
+Then, we introduce $\odot$ the coefficient-wise product:
 $$ P_\gamma \in U(a, b) \Leftrightarrow \left\{ \begin{array}{lrr}
 u \odot K v & = & a \\
 v \odot K^\trans u & = & b
@@ -264,26 +324,29 @@ $$ P_\gamma \in U(a, b) \Leftrightarrow \left\{ \begin{array}{lrc}
 u & = & a \, / \, K v \\
 v & = & b \, / \, K^\trans u
 \end{array} \right. $$
-L'algorithme de Sinkhorn est alors le suivant :\\
+Sinkhorn's algorithm is thus the following: \\
 \begin{algorithm}[H]
 	\caption{Sinkhorn}
-	\Repeat{convergence de $u, v$}{
+	\Repeat{convergence of $u, v$}{
 		$u \gets a \, / \, K v$ \;
 		$v \gets b \, / \, K^\trans u$ \;
 	}
 \end{algorithm}
 
-\paragraph{Complexité}
-Il a été prouvé que l'algorithme converge en temps linéaire. De plus une étape de calcul se fait en $\mathcal{O}(nm)$ mais les calculs peuvent être parallélisés. Il est aussi possible d'utiliser des convolutions sur une grille pour obtenir une complexité en $\mathcal{O}(n \log n)$.
+\paragraph{Complexity}
+It has been proved that the algorithm converges in linear time. Moreover,
+an iteration is done in $\mathcal{O}(mn)$ but the computation can be
+parallelized. It is also possible to use grid convolution to obtain a
+complexity of $\mathcal{O}(n \log n)$.
 
 \paragraph{Dual}
 On peut aussi relever la formulation du dual avec régularisation :
 $$ W_\gamma(\mu, \nu) = \max_{\alpha, \beta} \alpha^\trans a + \beta^\trans b - \gamma \left( e^{\alpha / \gamma} \right)^\trans K \left( e^{\beta / \gamma} \right) $$
 
 \paragraph{Lien avec la divergence KL}
-En posant le noyau :
+We write the kernel:
 $$ K_\gamma(i, j) = \exp \left( - \dfrac{d_{i, j}}{\gamma} \right) $$
-On obtient une reformulation de la régularisation entropique avec la divergence KL :
+We obtain a new formulation of the entropic regularization with the KL-divergence:
 $$ W_\gamma(\mu, \nu) = \min_{P \in U(a, b)} \gamma KL(P | K_\gamma) $$
 
 \sect{Optimal Transport and Machine Learning}
