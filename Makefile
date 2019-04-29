@@ -69,5 +69,7 @@ mrproper: clean
 
 $(DEP_FOLDER)/%.d: $(SRC_FOLDER)/%.cpp $(DEP_FOLDER)
 	$(CXX) $(INCLUDE) -MM -MD -o $@ $<
+$(DEP_FOLDER)/%.d: $(SRC_FOLDER)/%.c $(DEP_FOLDER)
+	$(CXX) $(INCLUDE) -MM -MD -o $@ $<
 
 include $(DEP_C) $(DEP_CPP)
