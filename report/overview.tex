@@ -351,45 +351,123 @@ $$ W_\gamma(\mu, \nu) = \min_{P \in U(a, b)} \gamma KL(P | K_\gamma) $$
 
 \sect{Optimal Transport and Machine Learning}
 
+Now that we have convinced ourselves of the good mathematical foundations
+of Optimal Transport, and of the fact that we can actually compute it, we
+can wonder how we can put this tool to great use in the setting of machine
+learning.
+
 \subs{Compute the optimal transport of what?}
 
-Since Sinkhorn can be parallelized, one can compute a large amount of Optimal
-Transport distances: for instance look into a database for similarity based
-retrieval, blablabla
+In the previous section we have seen that we have an algorithm to compute
+optimal transport (Sinkhorn's algorithm), and that this algorithm can be
+parallelized. We can take advantage of this fact to actually compute optimal
+transport among huge databases. One of the application of this is similarity
+based retrieval.
 
 \paragraph{Color histograms}
 
-For image retrieval blablabla...
+The color-histogram of an image is a tool that characterizes the color
+distribution of an image. Interestingly enough, it has been noticed that
+color-histogram are good tool to describe the similarity of two images. Since
+we now have at our disposal a tool to compute the distance between two
+distribution probability, we can apply it for histograms (that are really not
+that far from probability distribution, so much so that the algorithms and
+methods that we described earlier are relevant even without any fondamental
+change of setting). For a given image we can thus compute the distance between
+its histogram and the histogram of images comming from a bigger database:
+picking images that have the most similar histogram (in the sense of the
+Wasserstein distance) will therefore allow some form of similarity based
+image retrieval.
+
+\begin{center}
+	\includegraphics[scale=0.3]{image_histo.png}
+    \captionof{figure}{Two images and their respective color-histograms,
+    embedded in $\R^2$}
+\end{center}
+
 
 \paragraph{Cloud of word}
 
-For similar documents retrieval blabla
+We can apply the same technique as before, but instead of considering
+color-histograms, we can try to find some kind of distribution coming from
+other kind of documents, for example text documents. Some previous work,
+like the $\texttt{word2vec}$ framework allow for embedding of natural
+language words into an Euclidean space. A text therefore defines some sort
+of distribution of probability over this embedded space. As for images we
+can then compare this distribution to the distributions of other texts coming
+from a database (still in the sense of Wasserstein distance), and hopefully
+retrieve text dealing with similar topic, although there may be some
+significant differences in the actual vocabulary of those texts. We take
+advantage of the geometry of the distribution of probability in the embedded
+text, that tries to ensure that similar distributions are coming from texts
+dealing with similar topics.
 
 \subs{Wassersteinization}
 
-Introduce Wasserstein distance into optimizations problem.
+We can go further than just using the Wasserstein to compute distance between
+distributions and use this as the main tool for the machine learning problems
+that we considered (we previously emphasized retrieval tasks) by introducing
+the Wasserstein distance on well studied machine learning settings and
+problems. We thus shed a new light on those problems, and the results are
+often fruitful. Some authors have coined the term $\textbf{Wassersteinization}$
+for this process.
 
-We show that we can computationaly differentiate, and therefore we can deal
-with it in a variety of optimization problem, including machine learning
-related opt. problems. 
+\DEF{
+	$\textbf{Wassersteinization}$ is the process of introducing optimal
+	transport into an optimization or machine learning problem
+} 
 
-Somehow revisiting machine learning problems.
+One way to approach this process is to introduce Wasserstein distance as a
+loss or fidelity term in optimization problems. This will motivate the interest
+toward the study of not only the very Wasserstein distance, but also of its
+derivative. More precisely we can show that we can computationaly evaluate
+the derivatives of the Wasserstein distance. Therefore we can deal with it a variety of optimization problems, including machine lerning related ones.
 
 \paragraph{Averaging data}
 
-histograms, distribution, images, experiments (repetition of same expriment,
-MEG mesures, average over the experiments might be relevant)
+We can also see optimal transport as a normalization tool for data. One of
+the setting where this point of view as been proposed is the one of data
+averaging. We have already discussed earlier the benefits of Wasserstein's
+barycenters when compared to, say linear interpolations or $l_2$
+barycenters. One can see this put in good use in the case of data acquired
+through real world experiment. For instance, we can imagine a neurology
+setting, where the goal is to study the reaction of the brain of a patient
+to a certain precise stimulus. To do this we subjet the patient to the stimuli
+several time and we aim to submit the measures of the brain activity to
+a machine algorithm to study some of its features. But because of a whole
+lot of data acquisition hazards (noise, imprecisions in the measures, etc),
+the result will slighty differ from one experiment to another although it
+concerns the same stimulus. Therefore computing the average of the brain
+activity (that can easily seen to be analog to a probability distribution
+on the brain space), in the sense of Wasserstein barycenters can hopefully
+give access to more relevant data, without loosing the meaningful information.
+
+
+\begin{center}
+    \centering
+	\includegraphics[scale=0.3]{brain_map.png}
+    \captionof{figure}{On the left the average brain map among several
+    experiments, on the right the brain activity map on a single experiment.}
+\end{center}
+
+The same idea can be followed in other fields, like imagery for instance.
 
 \paragraph{Aggregating distributions}
 
-From a very big dataset, split it in $J$ parts, learn the distribution (eg. w/
-Bayesaian Learning) from each of the part in parralel (on $J$ machines):
-the $J$ distributions should not be very different, but still the variance in
-the data will cause some variation: the idea is to use Wasserstein averaging
-to aggregate the distributions, and get a more meaningful one. Theoretic
-guaranties! :D
-
-Wasserstein posterior
+Instead of processing the input of our machine learning algorithms, one can
+use this idea of aggregating several distribution on the output of machine
+learning algorithms. Imagine that we want to use Bayesian learning (\emph{ie.}
+learn a probability distribution, in a Bayesian framework), on a dataset so
+huge that it cannot even fit on a single machine, and would it fit that the
+computation time would be out of control. We can imagine to split the dataset
+into $J$ different parts and distribute it amongst $J$ machines running the
+same learning algorithms. The result of this process is a set of $J$
+distributions learned from each part of the dataset. Although they represent
+the same truth, because of the variation of the data those variation will
+be slightly different. Once again Wasserstein-averaging provides a useful
+tool to aggregate those distributions, into an hopefully meaningful one,
+closer the underlying real distribution. The good news is that this Wasserstein
+posterior aggregation method comes with theoretic statistical guaranties!
 
 %\subs{Semi-suppervised learning setting}
 

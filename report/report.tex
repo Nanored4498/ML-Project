@@ -25,6 +25,8 @@
 \usepackage[ruled,vlined]{algorithm2e}
 \usepackage{wrapfig}
 \usepackage{kpfonts}
+\usepackage{capt-of}
+\usepackage{caption}
 \usepackage{tikz}
 
 \graphicspath{{ims/}}
@@ -107,8 +109,8 @@
 }
 
 
-\newcommand{\DEF}[1]{\vspace{1mm} \mybox{Définition}{blue}{white}{#1}}
-\newcommand{\REM}[1]{\vspace{1mm} \mybox{Remarque}{darkPurple}{white}{#1}}
+\newcommand{\DEF}[1]{\vspace{1mm} \mybox{Definition}{blue}{white}{#1}}
+\newcommand{\REM}[1]{\vspace{1mm} \mybox{Remark}{darkPurple}{white}{#1}}
 
 \newcounter{propNum}
 \newcommand{\PROP}[2][]{
@@ -116,7 +118,7 @@
 	\vspace{1mm}
 	\mybox{Proposition \thepropNum #1}{red}{white}{#2}
 }
-\newcommand{\dem}{\paragraph{Démonstration}}
+\newcommand{\dem}{\paragraph{Demonstration}}
 \newcommand{\findem}{\hfill $\blacksquare$}
 \newcommand{\exe}{\paragraph{\textit{\textcolor{green}{Exemple}}}}
 
