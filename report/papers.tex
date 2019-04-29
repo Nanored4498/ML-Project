@@ -35,10 +35,10 @@ We some computations we arrive at:
 \vspace{3mm}
 \begin{algorithm}[H]
 	\caption{\textsc{Convolutional-Sinkhorn}($\mu_0, \mu_1, H_t, a$)}
-	$v, w \gets 1$
-	\Repeat{convergence of $u, v$}{
+	$v, w \gets 1$ \;
+	\Repeat{convergence of $v, w$}{
 		$v \gets \mu_0 \oslash H_t(a \otimes w)$ \;
-		$v \gets \mu_1 \oslash H_t(a \otimes wv)$ \;
+		$w \gets \mu_1 \oslash H_t(a \otimes v)$ \;
 	}
 	\Return $2t a^\trans \left[ \left( \mu_0 \otimes \ln v \right) + \left( \mu_1 \otimes \ln w \right) \right]$
 \end{algorithm}
@@ -47,16 +47,48 @@ We some computations we arrive at:
 Where $\oslash$ and $\otimes$ denote element-wise operations. As Sinkhorn algorithm we obtain a simple iterative algorithm where, this time, steps can be computed in $\mathcal{O}(n \log n)$ in many cases, where $n$ is the size of the domain $M$.
 
 \paragraph{Barycenter}
-An algorithm for computing barycenters is also provided. We won't enter into details but we give their algorithm for computing the barycenter of distributions $\mu_i$ associated with weights $\alpha_i$:
+An algorithm for computing barycenters is also provided. We won't enter into details but we give their algorithm for computing the barycenter of distributions $\mu_i$ associated with weights $\alpha_i$ for $1 \leqslant i \leqslant k$:
 
 \vspace{3mm}
 \begin{algorithm}[H]
-	\caption{\textsc{Convolutional-Barycenter}($\mu_0, \mu_1, H_t, a$)}
-	$v, w \gets 1$
-	\Repeat{convergence of $u, v$}{
-		$v \gets \mu_0 \oslash H_t(a \otimes w)$ \;
-		$v \gets \mu_1 \oslash H_t(a \otimes wv)$ \;
+	\caption{\textsc{Convolutional-Barycenter}($\{\mu_i\}, \{ \alpha_i \}, H_t, a$)}
+	$v_1, \dots, v_k \gets 1$ \;
+	$w_1, \dots, w_k \gets 1$ \;
+	\Repeat{convergence of $v_i, w_i$}{
+		$\mu \gets 1$ \;
+		\For{$i = 1, \dots, k$}{
+			$w_i \gets \mu_i \oslash H_t(a \otimes v_i)$ \;
+			$d_i \gets v_i \otimes H_t(a \otimes w_i)$ \;
+			$\mu \gets \mu \otimes d_i^{\alpha_i}$ \;
+		}
+		\vspace{3mm}
+		// Optional \;
+		$\mu \gets $ \textsc{Entropic-Sharpening}$\left( \mu, \max_i H(\mu_i) \right)$ \;
+		\vspace{3mm}
+		\For{$i = 1, \dots, k$}{
+			$v_i \gets v_i \otimes \mu \oslash d_i$ \;
+		}
 	}
 	\Return $2t a^\trans \left[ \left( \mu_0 \otimes \ln v \right) + \left( \mu_1 \otimes \ln w \right) \right]$
 \end{algorithm}
 \vspace{3mm}
+Where entropic sharpening allow us to make the entropy of the result $\mu$ smaller than the maximum entropy of all $\mu_i$. To do so if $H(\mu)$ is greater than $\max_i H(\mu_i)$, then we set $\mu$ to $\mu^\beta$ where $\beta$ is such that $H(\mu^\beta) = \max_i H(\mu_i)$. We can find $\beta$ using Newton's method.
+
+\paragraph{Applications}
+This has many applications in geometric domains. Applications that are given are:
+\begin{itemize}
+	\item Shape interpolation
+		\begin{center}
+		\includegraphics[scale=0.22]{shape_int.png}
+		\end{center}
+	\item BRDF design
+	\item Color histogram manipulation
+	\item Skeleton layout
+	\item Soft maps
+\end{itemize}
+Finally here are two images of barycenters they have computed. The first one is an image where we find barycenters of four images that are in the corners. The second is an interpolation between two cards. As we tried to reproduce it in the implementation part we put them here :
+
+\begin{center}
+	\includegraphics[scale=0.25]{bars_paper.png} \\ \vspace{3mm}
+	\includegraphics[scale=0.4]{cards_paper.png}
+\end{center}
