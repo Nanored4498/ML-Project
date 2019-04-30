@@ -71,7 +71,7 @@ This paper proposes a new GAN training algorithm based on Wasserstein distance. 
 \paragraph{Advantage of Wasserstein distance}
 They illustrate the interest of Wasserstein distance on the convergence of the probability $\Pp_\theta = g_\theta(Z) = (\theta, Z)$ toward $\Pp_0 = (0, Z)$ for $Z \sim U([0, 1])$ when $\theta$ tends to 0. We have:
 \begin{itemize}
-	\item $W(\Pp_0, \Pp_0\theta) = | \theta |$ where $W$ is the Wasserstein distance.
+	\item $W(\Pp_0, \Pp_\theta) = | \theta |$ where $W$ is the Wasserstein distance.
 	\item $JS(\Pp_0, \Pp_\theta) = \left\{ \begin{array}{ll}
 			\log 2 & \text{if } \theta \neq 0 \\
 			0 & \text{if } \theta = 0
@@ -88,8 +88,45 @@ They illustrate the interest of Wasserstein distance on the convergence of the p
 Thus the Wasserstein distance is the only one for which there is convergence. Then a gradient descent can be applied with the Wasserstein distance but it can't with other divergences. This a just an example but they also proved the following theorem which shows the continuity under some assumptions:
 
 \PROP{
-	tada
+	Let $\Pp_r$ be a distribution over $\mathcal{X}$ and let $Z$ be a distribution over another space $\mathcal{Z}$ (e.g Gaussian). Let $g : \R^d \times \mathcal{Z} \rightarrow \mathcal{X}$ be a function that will be denoted $g_\theta(z)$ for $g(\theta, z)$. We denote by $\Pp_\theta$ the distribution of $g_\theta(Z)$. Then:
+	\begin{itemize}
+		\item If $g$ is continuous in $\theta$, so is $W(\Pp_r, \Pp_\theta)$.
+		\item If $g$ is locally Lipschitz and satisfies the following regularity assumption: By denoting the local Lipschitz constant $L(\theta, z)$ we have $\E_{z \sim Z} \left[ L(\theta, z) \right] < + \infty$. Then $W(\Pp_r, \Pp_\theta)$ is continuous everywhere and almost differentiable everywhere.
+		\item The two previous statements are false for Jensen-Shannon and KL divergences.
+	\end{itemize}
 }
+
+They also give another theorem that well show that the Wasserstein distance is a very natural divergence for probability distributions:
+
+\PROP{
+	Consider a sequence of distributions $(\Pp_n)$ on a compact space $\mathcal{X}$. If $W(\Pp_n, \Pp) \rightarrow 0$ for a certain distribution $\Pp$, then $\Pp_n \xrightarrow{\mathcal{D}} \Pp$ where the limit is in the sense of the convergence in distribution.
+}
+
+\paragraph{WGAN}
+To construct their GAN they need to compute the gradient of $W(\Pp_r, \Pp_\theta)$ with respect to $\theta$. For that they consider the following dual formulation of the Wasserstein distance:
+$$ W(\Pp_r ,\Pp_\theta) = \max_{\| f \|_L \leqslant 1} \E_{x \sim \Pp_r} \left[ f(x) \right] - \E_{x \sim \Pp_\theta} \left[ f(x) \right] $$
+Where $\| f \|_L$ denote the Lipshitz coefficient of $f$. If $f$ is the solution to the maximization problem then the gradient is:
+$$ \nabla_\theta W(\Pp_r, \Pp_\theta) = - \E_{z \sim Z} \left[ \nabla_\theta f(g_\theta(z)) \right] $$
+To find $f$ they train a neural network parameterized with weights $w$ in a compact space $\mathcal{W}$ that lead to a function $f_w$. Then they can backprop $\theta$ using $\E_{z \sim Z} \left[ \nabla_\theta f_w (g_\theta(z)) \right]$.  To have $w$ in a compact space, they use weight clamping of $w$. Their algorithm is in the \figurename~\ref{algo}.
+
+\begin{figure}[t]
+	\centering
+	\includegraphics[scale=0.6]{algorithm.png}
+	\caption{Algorithm of the WGAN}
+	\label{algo}
+\end{figure}
+
+\paragraph{results}
+First, the authors set up a small experiment to showcase the difference between GAN and WGAN (\figurename~\ref{compa}). There are two 1D Gaussian distributions, blue for real and green for fake. Train a GAN discriminator and WGAN critic to optimality, then plot their values over the space. The red curve is the GAN discriminator output, and the cyan curve is the WGAN critic output.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.36]{wgan_res.png}
+	\caption{Comparison between a GAN discriminator and the WGAN Critic}
+	\label{compa}
+\end{figure}
+
+Both identify which distribution is real and which is fake, but the GAN discriminator does so in a way that makes gradients vanish over most of the space. In contrast, the weight clamping in WGAN gives a reasonably nice gradient over everything.
 
 \sect{Convolutional Wasserstein Distances: Efficient Optimal Transportation on Geometric Domains \cite{Goe++}}
 
