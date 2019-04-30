@@ -21,22 +21,7 @@ Were $M$ is a distance matrix.
 \paragraph{Computation}
 By duality theory he obtained that to $\alpha$, corresponds a value $\lambda \geqslant 0$ such that the distance $d_{M, \alpha}$ is equal to the distance $d_M^\lambda$ defined by:
 $$ d_M^\lambda(a, b) = \langle P^\lambda, M \rangle, \quad \text{where } P^\lambda = \argmin_{P \in U(a, b)} \langle P, M \rangle - \dfrac{1}{\lambda} H(P) $$
-Then Cuturi show that this new distance can be computed with a much cheaper cost than the original Wassertein distance $d_M$. In fact the iterative Sinkhorn algorithm presented below converge in few steps to the transport plan $P^\lambda$. The \figurename~\ref{recap1} summarize the relationships between all these distances.
-
-\vspace{3mm}
-\begin{algorithm}[H]
-	\caption{\textsc{Sinkhorn}$\left( a, \{ b_i \}_{i=1}^N, M, \lambda \right)$}
-	$B \gets \left[ b_1, \dots, b_N \right] \in \R^{n \times N}$ \;
-	$K \gets \exp \left( \lambda M \right)$ \;
-	$u = \left[ u_1, \dots, u_N \right] \gets \mathbbm{1}_{n \times N} \, / \, n$ \;
-	\Repeat{convergence of $u$}{
-		$u \gets a \, / \, \left( K \left( B \, / \, \left( K^\trans u \right) \right) \right)$ \;
-	}
-	$v = \left[ v_1, \dots, v_N \right] \gets B \, / \, \left( K^\trans u \right)$ \;
-	$P^\lambda_i \gets \text{diag}(u_i) K \text{diag}(v_i)$ \;
-	\Return $d = \left[ d_M^\lambda(a, b_1), \dots, d_M^\lambda(a, b_N) \right] = \left[ \left\langle M, P^\lambda_1 \right\rangle, \dots, \left\langle M, P^\lambda_N \right\rangle \right]$
-\end{algorithm}
-\vspace{3mm}
+Then Cuturi show that this new distance can be computed with a much cheaper cost than the original Wassertein distance $d_M$. In fact the iterative Sinkhorn algorithm to compute this new distance converge in few steps to the transport plan $P\^\lambda$. The \figurename~\ref{recap1} summarize the relationships between all these distances.
 
 \begin{figure}
 	\centering
@@ -46,9 +31,9 @@ Then Cuturi show that this new distance can be computed with a much cheaper cost
 	\label{recap1}
 \end{figure}
 
-\paragraph{Results}
+\sect{Wasserstein GAN}
 
-\sect{Wasserstein GAN \cite{Arj++}}
+\cite{Arj++}
 
 \sect{Convolutional Wasserstein Distances: Efficient Optimal Transportation on Geometric Domains \cite{Goe++}}
 
@@ -129,7 +114,7 @@ This has many applications in geometric domains. Applications that are given are
 	\item Skeleton layout
 	\item Soft maps
 \end{itemize}
-Finally \figurename~\ref{barp} and \figurename~\ref{cardp} are two images of barycenters they have computed. The first one is an image where we find barycenters of four images that are in the corners. The second is an interpolation between two cards. As we tried to reproduce it in the implementation part we put them here:
+Finally here are two images of barycenters they have computed. The first one is an image where we find barycenters of four images that are in the corners. The second is an interpolation between two cards. As we tried to reproduce it in the implementation part we put them here :
 
 \begin{figure}[h]
 	\centering
