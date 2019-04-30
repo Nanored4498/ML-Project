@@ -66,6 +66,31 @@ The regularized Wasserstein distance is then used in a SVM to classifiy images o
 
 \sect{Wasserstein GAN \cite{Arj++}}
 
+This paper proposes a new GAN training algorithm based on Wasserstein distance. When we learn a probability we need to use a divergence between probability distributions. In a first time they show the advantages of the Wasserstein distance over all well-known other divergences on probabilities. Thanks to their WGAN (for Wasserstein GAN), they cure the problem of the need of maintaining a balance between training discriminator and training generator. They also observed that the mode dropping phenomenon is reduced. Furthermore theu GAN allow to plot the Wasserstein distance continuously which is very usefull for debugging and to have an estimation of the quality.
+
+\paragraph{Advantage of Wasserstein distance}
+They illustrate the interest of Wasserstein distance on the convergence of the probability $\Pp_\theta = g_\theta(Z) = (\theta, Z)$ toward $\Pp_0 = (0, Z)$ for $Z \sim U([0, 1])$ when $\theta$ tends to 0. We have:
+\begin{itemize}
+	\item $W(\Pp_0, \Pp_0\theta) = | \theta |$ where $W$ is the Wasserstein distance.
+	\item $JS(\Pp_0, \Pp_\theta) = \left\{ \begin{array}{ll}
+			\log 2 & \text{if } \theta \neq 0 \\
+			0 & \text{if } \theta = 0
+		\end{array} \right.$ where $JS$ is the Jensen-Shannon divergence.
+	\item $KL(\Pp_0, \Pp_\theta) = JS(\Pp_\theta, \Pp_0) = \left\{ \begin{array}{ll}
+			+ \infty & \text{if } \theta \neq 0 \\
+			0 & \text{if } \theta = 0
+		\end{array} \right.$ where $KL$ is the Kullback-Leibler divergence.
+	\item $\delta(\Pp_0, \Pp_\theta) = \left\{ \begin{array}{ll}
+			1 & \text{if } \theta \neq 0 \\
+			0 & \text{if } \theta = 0
+		\end{array} \right.$ where $\delta$ is the total variation distance defined as $\delta(\Pp_0, \Pp_1) = \sup_{A \in \Sigma} | \Pp_0(A) - \Pp_1(A) |$ with $\Sigma$ the set of all Borel subsets.
+\end{itemize}
+Thus the Wasserstein distance is the only one for which there is convergence. Then a gradient descent can be applied with the Wasserstein distance but it can't with other divergences. This a just an example but they also proved the following theorem which shows the continuity under some assumptions:
+
+\PROP{
+	tada
+}
+
 \sect{Convolutional Wasserstein Distances: Efficient Optimal Transportation on Geometric Domains \cite{Goe++}}
 
 Because a single step of Sinkhorn algorithm has a complexity in $\mathcal{O}(n^2)$, computing the Wassertein distance may take a while in many cases. That's why the researchers who write this paper thought about a more effective solution to compute a step. They found a way to use Gaussian convolution with a $\mathcal{O}(n \log n)$ complexity instead of a matrix-vector product. More generally they use a heat kernel. So instead of the convolution it can also be a sparse pre-factored linear system which can be computed in a complexity smaller than $\mathcal{O}(n^2)$. Furthermore by doing this, the convergence is still linear. Of course this can not be applied in all cases of optimal transport, but it can be used on very common geometric domains, like images or meshes. In addition of the computation of Wasserstein distance, they also propose a way to use convolution in the computation of Wasserstein barycentres and Wasserstein propagation.
