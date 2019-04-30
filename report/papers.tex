@@ -47,6 +47,22 @@ Then Cuturi show that this new distance can be computed with a much cheaper cost
 \end{figure}
 
 \paragraph{Results}
+The regularized Wasserstein distance is then used in a SVM to classifiy images of the MNIST database. The \figurename~\ref{comp} compare the error on a test set for different distances used in the SVM. The distance EMD is the classical optimal transport. As we can see the regularized version beat all distances. Furthermore he evaluated the execution time by stopping the iterations when $\| d_{i+1} / d_i - 1 \| < 10^{-4}$ where $d_i$ is the distance obtained at the end of the iteration $i$. He gave a comparison between EMD and regularized Wasserstein for different values of $\lambda$ in the \figurename~\ref{comp2}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.55]{comp.png}
+	\caption{Test error for different distances}
+	\label{comp}
+\end{figure}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{comp2.png}
+\caption{Execution time for different distances}
+\label{comp2}
+\end{figure}
+
+\newpage
 
 \sect{Wasserstein GAN \cite{Arj++}}
 
