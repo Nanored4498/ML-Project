@@ -5,30 +5,38 @@ from sklearn.decomposition import PCA
 import numpy as np
 import pylab as pl
 
+# Load training set
 y_train = np.array(list(map(int, input().split())))
 n_train = len(y_train)
 D_train = []
 for _ in range(n_train):
 	D_train.append(list(map(float, input().split())))
 D_train = np.array(D_train)
+
+# Load test set
 y_test = np.array(list(map(int, input().split())))
 n_test = len(y_test)
 D_test = []
 for _ in range(n_test):
 	D_test.append(list(map(float, input().split())))
 D_test = np.array(D_test)
+
+# Substract the minimum distance
 mi = min(D_train.flatten())
 D_train = D_train - mi
 D_test = D_test - mi
 
+# Print the number of images of each classes
 ns = np.array([0]*10)
 for i in range(n_train):
 	ns[y_train[i]] += 1
 print(ns)
 
+# Gauss transformation
 def gauss(D, t):
 	return np.exp(- D**0.7 / t)
 
+# Use SVM with different parameters
 L = []
 for t in np.arange(3, 13, 0.5):
 	for C in np.arange(4.5, 11, 0.5):
@@ -36,14 +44,20 @@ for t in np.arange(3, 13, 0.5):
 		K_test = gauss(D_test, t)
 		svc = SVC(kernel='precomputed', C=C).fit(K_train, y_train)
 		L.append((t, C, svc.score(K_test, y_test), len(svc.support_)))
+
+# Print best results
 ms = max(a[2] for a in L)
 mt = 0
 for t, C, s, ls in L:
 	if s + 1.5 / n_test > ms:
-		print(round(t, 4), C, ls, round(s, 4))
+		print('t:', round(t, 4), 'C:', C, 'Number of support vectors:', ls, 'Result', str(round(100*s, 4)) + '%')
 	if s == ms:
 		mt = t
+print("===================================")
+print("Best Result:", str(round(100*ms, 4)) + '%')
+print("===================================")
 
+# Apply PCA on the kernel to visualize 
 su = np.array([[0.0]*n_train for _ in range(10)])
 K = gauss(D_train, mt)
 for i in range(n_train):
@@ -62,6 +76,8 @@ inds = np.array(inds).reshape(n_train, 1)
 K2 = K[inds, inds.T]
 pl.legend()
 pl.show()
+
+# Show kernel matrix
 pl.figure(figsize=(10, 10))
 pl.xlim(0, n_train)
 pl.ylim(n_train, 0)
