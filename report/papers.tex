@@ -2,9 +2,26 @@
 
 \myminitoc
 
-\sect{Sinkhorn Distances: Lightspeed Computation of Optimal Transport}
+\sect{Sinkhorn Distances: Lightspeed Computation of Optimal Transport \cite{Cut}}
 
-\cite{Cut}
+In this paper written in 2013, Cuturi proposed one of the most currently used algorithm to compute Wasserstein distances. He smoothed the classic optimal transport problem thanks to an entropy-regularization and it leads to a new distance which has a faster solver. He also showed that using regularization gives better results on MNIST classification problem than using the classic Wasserstein distance or obviously the Euclidean distance. This paper is part of the search for adequate and easily computable distances in machine learning. Wasserstein distance is better than Euclidean distance in many cases of machine learning but because the complexity to compute it is $\mathcal{O}(n^3 \log n)$ for $n$ the size of the data Wasserstein distance is rarely used. That's why techniques to compute the Wasserstein distance had to be develop.
+
+\paragraph{Idea}
+The main ideas of this paper are the use of an entropic-regularization to simplify computation when using Sinkhorn iterative algorithm and idea of computing the distances between one point and a family of other points in the same time, to use matrix-matrix multiplications instead of matrix-vector multiplications. Thus the algorithm can be implemented on GPU architectures.
+
+\paragraph{Regularization}
+We recall that the goal of the optimal transport problem in the Kantorovich formulation is to find a joint distribution $P \in \R^{d \times d}$ where the marginals equal the two distributions for which we want to compute the distance. That is to say $P \mathbbm{1}_n = a$ and $P^\trans \mathbbm{1}_n = b$ when we compute the distance between $a$ and $b$. We call $U(a, b)$ the set of all possible values for $P$. By denoting the entropy by $H$ we can show that:
+$$ H(P) \leqslant H(a) + H(b) $$
+And $H(P) = H(a) + H(b)$ when $P = a b^\trans$. We then restrict $P$ to the new set:
+$$ U_\alpha(a, b) = \{ P \in U(a, b) \, | \, \text{KL}(P || a b^\trans) \leqslant \alpha \} = \{ P \in U(a, b) \, | \, H(P) \geqslant H(a) + H(b) - \alpha \} $$
+Two reasons are given to this restriction. The first one is that it will be easier to compute the distance. The second is that without regularization $P$ has almost $2n-1$ non-zero coefficients. The transport is almost deterministic and it is not natural. That's why smoothing the transport plan with entropic regularization is presented as a good idea. In the paper, it is shown that this restriction induce a new distance:
+$$ d_{M, \alpha} = \min_{P \in U_\alpha(a, b)} \langle P, M \rangle $$
+Were $M$ is a distance matrix.
+
+\paragraph{Computation}
+By duality theory he obtained that to $\alpha$, corresponds a value $\lambda \geqslant 0$ such that the distance $d_{M, \alpha}$ is equal to the distance $d_M^\lambda$ defined by:
+$$ d_M^\lambda(a, b) = \langle P^\lambda, M \rangle, \quad \text{where } P^\lambda = \argmin_{P \in U(a, b)} \langle P, M \rangle - \dfrac{1}{\lambda} H(P) $$
+Then Cuturi show that this new distance can be computed with a much cheaper cost than the original Wassertein distance.
 
 \sect{Wasserstein GAN}
 
@@ -77,10 +94,13 @@ Where entropic sharpening allow us to make the entropy of the result $\mu$ small
 \paragraph{Applications}
 This has many applications in geometric domains. Applications that are given are:
 \begin{itemize}
-	\item Shape interpolation
-		\begin{center}
-		\includegraphics[scale=0.22]{shape_int.png}
-		\end{center}
+	\item Shape interpolation (\figurename~\ref{shape})
+		\begin{figure}[h]
+			\centering
+			\includegraphics[scale=0.22]{shape_int.png}
+			\caption{Application to shape interpolation}
+			\label{shape}
+		\end{figure}
 	\item BRDF design
 	\item Color histogram manipulation
 	\item Skeleton layout
@@ -90,13 +110,13 @@ Finally here are two images of barycenters they have computed. The first one is 
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=0.25]{bars_paper.png}
+	\includegraphics[scale=0.28]{bars_paper.png}
 	\caption{Barycenters of four images}
 	\label{barp}
 \end{figure}
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=0.4]{cards_paper.png}
+	\includegraphics[scale=0.45]{cards_paper.png}
 	\caption{Interpolation of two images of cards for times $t = 0, 0.25, 0.5, 0.75, 1$.}
 	\label{cardp}
 \end{figure}

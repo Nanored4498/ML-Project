@@ -26,7 +26,7 @@ We first computed some barycenters to be sure that everything works. The code fo
 	\caption{Reproduction of \figurename~\ref{barp}}
 \end{figure}
 
-The result seems to be correct. We then try on larger images, the cards image that we can find in the original paper presenting convolutional Wassertein \cite{Goe++}. Here is what we obtained:
+The result seems to be correct. We then try on larger images, the card images that we can find in the original paper presenting convolutional Wassertein \cite{Goe++}. Here is what we obtained:
 
 \begin{figure}[h]
 	\centering
@@ -40,3 +40,6 @@ The result seems to be correct. We then try on larger images, the cards image th
 	\end{tikzpicture}
 	\caption{Reproduction of \figurename~\ref{cardp}}
 \end{figure}
+
+\paragraph{SVM usage}
+As proposed in the paper of Cuturi \cite{Cut}, we used the Wasserstein distance to compute the Gram matrix for 500 image and we used it as a kernel in a SVM. On a test set of 1500 images we obtained 92.4\% of good answers. Whereas with a kernel using Euclidean distance we obtain a good answer on only 88.4\%. To check these results you can run the python script \verb|learning.py| on the two kernels that are in the \verb|kernels| folder.
