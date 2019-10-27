@@ -2,12 +2,20 @@
 
 \myminitoc
 
-Optimal transport aims to define a geometry and a distance on the set of
-mesures of probability on a space.
+Optimal Transport theory aims to define a geometry along with a notion of
+distance on the set of probability measures over a space.
 
 \sect{Introduction}
 
 \subs{\textsc{Monge}'s Problem}
+
+The history of optimal transport formulations can be traced back to Gaspard
+Monge's \emph{Mémoire sur la théorie des déblais et des remblais (1781)},
+studying how to move masses of sand or soil from one place to another. The
+main motivation of this \emph{Mémoire} being that we can assign a cost to
+the act of moving a massic particle from one place to another, and it is
+of particular interest to seek for the most optimal way of moving a global
+quantity of mass from one place to another.
 
 \begin{center}
 	\begin{tikzpicture}[>=stealth']
@@ -33,31 +41,37 @@ mesures of probability on a space.
 	\end{tikzpicture}
 \end{center}
 
-\paragraph{Monge}
+\paragraph{Formalism of Monge's problem}
 
-We work on a space of probability $\Omega$. We consider two mesures of
-probability $\mu$ and $\nu$ on $\mathcal{P}(\Omega)$. We also consider a cost function
-$c : \Omega \times \Omega \rightarrow \R$. This function can for instance be the Euclidean distance. Monge's problem is therefore the following
+We work in a probability space $\Omega$. We consider two probability measures
+$\mu$ and $\nu$ on $\mathcal{P}(\Omega)$. We also consider a cost function
+$c : \Omega \times \Omega \rightarrow \R$. This function can for instance
+be the Euclidean distance. Monge's problem is therefore the following
 
-$$ \int_{\Omega} c \left( x, T(x) \right) \mu(x) $$
+$$ \min_{T: \Omega \to \Omega} \int_{\Omega} c \left( x, T(x) \right) \mu(x) $$
 \vspace{-2mm}
 $$ \text{s.t.} \quad \forall A \in \mathcal{P}(\Omega), \, \nu(A) = \mu \left( T^{-1}(A) \right) $$
 
 The function $T$ is called a transport map. It carries the information
-regarding the displacement of each elementary unit of probability: the mass
-located in $x$ is moved toward $T(x)$. The function $c$ thus allows to
-quantify the cost of the displacement of one elementary unit of mass. We
-want to minimize the average distance travelled by mass units during the
-optimal transport.
+regarding the displacement of each elementary unit of probability: the
+mass located in $x$ is moved toward $T(x)$. The function $c$ thus allows
+to quantify the cost of moving one elementary unit of mass. We want to
+minimize the average distance travelled by mass units during the optimal
+transport. The condition under which the optimization is performed ensures
+that all the mass of $\mu$ has been transported toward the distribution $\nu$.
 
 \paragraph{Limitations}
 
-The issue with this formulation of an optimal transport problem is that it
-doesn't handle discrete probability mesures. Indeed, if $\mu$ has a Dirac
-impulse bigger than every Dirac impulse of $\nu$, then the transport map
-cannot be build.
+The issue with such a formulation of an optimal transport problem is that
+it does not handle discrete probability measures. Indeed, if $\mu$ has a
+Dirac impulse bigger than every Dirac impulse of $\nu$, then the transport
+map cannot be build: we are only performing displacements of mass, and not
+actual repartition of mass.
 
 \subs{Kantorovich's problem}
+
+Kantorovich came up  with an alternative formulation for the optimal
+transport problem, aiming to handle discrete distributions.
 
 \begin{center}
 	\begin{tikzpicture}[>={latex}, scale=1.2]
@@ -84,11 +98,11 @@ cannot be build.
 \paragraph{Change of transport plan}
 The idea of Kantorovich is to change the function $T : \Omega \rightarrow
 \Omega$ into a probability $P$ on the product space $\mathcal{P}(\Omega \times
-\Omega)$. On the upper example, Monge's formulation forbids to separate the
+\Omega)$. On the above example, Monge's formulation forbids to split the
 masse of size 150 into two separate masses. With Kantorovich's formulation,
-this operation is accessible: the mass of $150$ is splitted into a mass of
-$90$ and a mass of $60$, both sent to different places. In the discrete
-case, we can represent what happens with a matrix.
+this operation becomes accessible: the mass of $150$ is splitted into a mass
+of $90$ and a mass of $60$, both sent to different places. In the discrete
+case, we can represent what happens through a matrix.
 
 \begin{center}
 	\begin{tikzpicture}[scale=1.15]
@@ -127,7 +141,8 @@ case, we can represent what happens with a matrix.
 
 \paragraph{Discrete Case}
 
-If we note $D$ our disance matrix, we obtain the following formulation in the discrete case:
+If we denote $D$ the distance matrix of the problem, we obtain the following
+formulation in the discrete case:
 
 $$ \min_P \langle P, D \rangle = \sum_i \sum_j p_{ij} d_{ij} $$
 \vspace{-4mm}
@@ -136,37 +151,70 @@ $$ \text{s.t.} \quad \left\{ \begin{array}{ll}
 \forall j & \sum_i p_{ij} = \nu_j
 \end{array} \right. $$
 
+The two conditions encode the fact that we aim to move all the mass of $\mu$
+toward all the mass of $\nu$.
+
 \paragraph{Continuous Case}
 
-In the continuous setting, we introduce the following set of joint probabilities:
+In the continuous setting, we introduce the following set of joint
+probabilities, which encodes the analog of the two conditions in the discrete
+case, making sure that $\mu$ has been fully transported to $\nu$.
 
-$$ \Pi(\mu, \nu) = \left\{ P \in \mathcal{P}(\Omega \times \Omega)~|~\forall A, B \in \Omega, \, P(A \times \Omega) = \mu(A), \, P(\Omega \times B) = \nu(B) \right\} $$
+$$ \Pi(\mu, \nu) = \left\{ P \in \mathcal{P}(\Omega \times \Omega) \mid \forall A, B \in \Omega, \, P(A \times \Omega) = \mu(A), \, P(\Omega \times B) = \nu(B) \right\} $$
 
-This set encodes the conditions of the discrete case but in the very
-continuous setting. We consider once again our cost function $c$ defined
-in the Monge's problem. Kantorovich's formulation now becomes the following
-optimization problem:
+We can rephrase the definition of $\Pi(\mu, \nu)$ as being the set of
+probability measures on $\Omega \times \Omega)$ with marginals $\mu$ and $\nu$.
+
+We consider once again a cost function $c$ defined as in the Monge's
+problem. Kantorovich's formulation now becomes the following optimization
+problem, where $X \sim \mu$ and $Y \sim \nu$:
 
 $$ \inf_{P \in \Pi(\mu, \nu)} \E_P \left[ c(X, Y) \right] = \int \int c(x, y) P(dx, dy) $$
+
+\paragraph{Existence of solutions} One can wonder whether solutions of
+Kantorovich's problem as formulated above exist. A rich litterature exists
+on this topic. For instance, in the case of measures on the $\mathbf{R}^n$
+space, with absolutely continuous measures $\mu$ and $\nu$ with respect to
+the Lebesgue measure, the existence (and uniqueness) of solutions will then
+depend on the properties of the cost function. If we consider the cost
+function $c_p(x,y) = | x - y |^p$, then we will have the following discussion:
+
+\begin{itemize}
+    \item $p > 1$: the strict convexity of $c_p$ ensures that there is a
+    unique solution to the Kantorovich problem
+    \item $p = 1$: here we can obtain the existence of a minimizer for the
+    Kantorovich, but we won't have the unicity of the solution
+    \item $p < 1$: in general, there will not exist solutions to the problem
+\end{itemize}
+
+More generally the existence of minimizers, as well as their uniqueness
+depends heavily on the structure of the space we consider, and the properties
+of both the measures and the cost function. A comprehensive study of those
+properties can be found in \cite{villani2003topics}.
+
 \subs{Wasserstein distance}
 
-This optimization problem allows us to define a distance between probability mesures:
+Having formulated this optimization problem allows us to define a distance
+between probability measures.
 
 \DEF{
     Given a probability space $\Omega$, a cost function $c : \Omega \times
     \Omega \rightarrow \R$ and two probabilitiy mesures $\mu$ and $\nu$ in
     $\mathcal{P}(\Omega)$, the \textbf{p-Wasserstein-distance} between $\mu$
-    and $\nu$ is defined by :
+    and $\nu$ is defined as:
 	$$ W_p(\mu, \nu) = \left( \inf_{P \in \Pi(\mu, \nu)} \int \int c(x,
 	y)^p P(dx, dy) \right)^{1 / p} $$
 	\vspace{-3mm}
 }
 
-This distance allows to compute barycenters between several probability
-distributions, and obtain results that are way more natural than barycenters
-obtained with other norms, like $l_2$ for instance. The following
-figure compares an interpolation (progressive weighted barycenter of two
-distributions) obtained via Wasserstein-distance and a linear interpolation.
+This notion of distance allows to compute barycenters between several
+probability distributions, and obtain results that are way more natural
+than barycenters obtained with other norms, like the $l^2$ norm for
+instance. The following figure compares an interpolation (\emph{i.e.}
+a progressive weighted barycenter of two distributions) obtained under
+Wasserstein-distance and a linear interpolation (the two target distributions
+being the blue and the red one, and the purple shape being an intermediate
+interpolation).
 
 \begin{center}
 	\begin{tikzpicture}[scale=0.85]
@@ -188,30 +236,56 @@ distributions) obtained via Wasserstein-distance and a linear interpolation.
 	\end{tikzpicture}
 \end{center}
 
-We recall that the computation of the barycenter $\mu$ of the $N$ distributions
-$\nu_i$ associated to the weights $\lambda_i$ boils down to the following
-minimization problem.
-$$ \min_{\mu \in \mathcal{P}(\Omega)} \sum_{i=1}^N \lambda_i W_p^p(\mu, \nu_i) $$
-Now you can observe what the barycenter looks like with $4$ distributions in the \figurename~\ref{shp1}.
+What emerges from those two interpolations is that the Wasserstein distance
+seems particularily well suited to manipulate distributions, as it appears
+to take into account the specificities (like modes, shape, etc) of both
+the source and the target distribution, and the resulting barycenter looks
+like a distribution combining those into one distribution, while the $l^2$
+barycenter does not merge those specificities into one distribution but
+rather renormalize the source and target distributions.
+
+We can extend this idea to the computation of the barycenter of an arbitrary
+number of distributions. Formally, the computing the barycenter $\mu$ of $N$
+distributions $\nu_i$ weighted by the $\lambda_i$ boils down to the following
+minimization problem:
+
+$$ \min_{\mu \in \mathcal{P}(\Omega)} \sum_{i=1}^N \lambda_i W_p^p(\mu,
+\nu_i) $$
+
+Now we can observe what the barycenter looks like with $4$ distributions
+(seen as images) on $\mathbf{R}^2$ in the \figurename~\ref{shp1}.
+
 \begin{figure}[h]
-	\centering
-	\includegraphics[scale=0.4]{wasserstein_bar.png}
-	\captionsetup{justification=centering}
-	\caption{Each image contains several barycenters of the four shapes that are in the corners}
+	\centering \includegraphics[scale=0.4]{wasserstein_bar.png}
+	\captionsetup{justification=centering} \caption{Each image contains
+	several barycenters of the four shapes that are in the corners}
 	\label{shp1}
 \end{figure}
 
 \sect{How to compute Optimal Transport?}
 
+Now that we have a convenient formulation of the optimal transport problem,
+we can study how to effectively compute minimizers of the optimal transport
+problem. For this we will introduce several new formulation, more adapted
+to effective solving. Sometimes, it is worth noting that we are only interested
+in computing the Wasserstein distance between two distributions, rather than
+the actual transport map.
+
 \subs{Duality}
 
-To do the computations, we embrace the setting of discrete spaces. Our
-probability mesures are sum of diracs impulses:
+To effectively solve the optimal transport problem, we embrace the setting
+of discrete spaces. In this setting, probability measures can be seen as a
+sum of diracs impulses.
 
 $$ \mu = \sum_{i=1}^n a_i \delta_{x_i} \qquad \nu = \sum_{j =1}^m b_j \delta_{y_j} $$
-Our cost function is a matrix $D \in \R_+^{n \times m}$ such that $D_{ij} = d(x_i, y_j)^p$. Our joint distribution $P$ is also a matrix of $\R_+^{n \times m}$ that has to satisfy several constraints that can be represented matricially. The set which $P$ belongs to is:
 
-$$ U(a, b) = \left\{ P \in \R_+^{n \times m}~|~P \mathbbm{1}_m = a, \, P^\trans \mathbbm{1}_n = b \right\} $$
+The cost function is a matrix $D \in \R_+^{n \times m}$ such that $D_{ij}
+= d(x_i, y_j)^p$. Our joint distribution $P$ is also a matrix of $\R_+^{n
+\times m}$ that has to satisfy several constraints that can be expressed
+matricially: if we denote by $a$ and $b$ the vector of the coefficients of
+the Dirac decompositions of, the set which $P$ has to belong to is:
+
+$$ U(a, b) = \left\{ P \in \R_+^{n \times m}~|~P \mathbf{1}_m = a, \, P^\trans \mathbf{1}_n = b \right\} $$
 
 \DEF{
     The Wasserstein distance in a discrete space is defined as:
@@ -219,15 +293,28 @@ $$ U(a, b) = \left\{ P \in \R_+^{n \times m}~|~P \mathbbm{1}_m = a, \, P^\trans 
 	\vspace{-6mm}
 }
 
-\paragraph{Dual} We now focus on the dual problem. For this we introduce the lagrangian.
+\paragraph{Dual} We now focus on the dual form of this optimization
+problem. For this we introduce the Lagrangian, using the Lagrange multipliers
+$\alpha$ and $\beta$
 
-$$ L(P, \alpha, \beta) = \langle P, D \rangle + \alpha^\trans (a - P \mathbbm{1}_m) + \beta^\trans (b - P^\trans \mathbbm{1}_n) $$
-The objective function of the dual is:
-$$ g(\alpha, \beta) = \min_{P \geqslant 0} L(P, \alpha, \beta) = \min_{P \geqslant 0} \alpha^\trans a + \beta^\trans b + \langle P, D - \alpha \mathbbm{1}_m^\trans - \mathbbm{1}_n \beta^\trans \rangle $$
-If the matrix $D - \alpha \mathbbm{1}_m^\trans - \mathbbm{1}_n \beta^\trans$ has a negative coefficient, then by having this coefficient grow toward $+\infty$ we obtain a minimum of $-\infty$. But if all the coefficients are non negative, then  $\langle P, D - \alpha
-\mathbbm{1}_m^\trans - \mathbbm{1}_n \beta^\trans \rangle$ is non negative and we just have to take $P=0$ to obtain a non zero value. We therefore obtain:
+$$
+    L(P, \alpha, \beta) = \langle P, D \rangle + \alpha^\trans (a - P \mathbf{1}_m) + \beta^\trans (b - P^\trans \mathbf{1}_n)
+$$
+
+As usual in a Lagrangian formulation, the objective function of the dual
+problem is:
+
+$$ g(\alpha, \beta) = \min_{P \geqslant 0} L(P, \alpha, \beta) = \min_{P \geqslant 0} \alpha^\trans a + \beta^\trans b + \langle P, D - \alpha \mathbf{1}_m^\trans - \mathbf{1}_n \beta^\trans \rangle $$
+
+If the matrix $D - \alpha \mathbf{1}_m^\trans - \mathbf{1}_n \beta^\trans$
+has a negative coefficient, then by having the corresponding coefficient
+of $P$ grow toward $+\infty$ we obtain a minimum of $-\infty$. But
+if all the coefficients are non negative, then  $\langle P, D - \alpha
+\mathbf{1}_m^\trans - \mathbf{1}_n \beta^\trans \rangle$ is non negative
+and we just have to take $P=0$ to obtain a non zero value. We therefore obtain:
+
 $$ g(\alpha, \beta) = \left\{ \begin{array}{ll}
-\alpha^\trans a + \beta^\trans b & \text{si } D - \alpha \mathbbm{1}_m^\trans - \mathbbm{1}_n \beta^\trans \geqslant 0 \\
+\alpha^\trans a + \beta^\trans b & \text{si } D - \alpha \mathbf{1}_m^\trans - \mathbf{1}_n \beta^\trans \geqslant 0 \\
 -\infty & \text{sinon}
 \end{array}\right. $$
 
@@ -239,14 +326,23 @@ Finally, the dual problem is the maximization of this function $g$.
 	\vspace{-5mm}
 }
 
-Using a minimum flow solver, we can solve this linear optimization problem in
-$\mathcal{O}(n^3 \log (n))$. But the solution is not stable, as illustrated
-on the following figure. If we slightly move our distance $D$ or if we change
-the source and destination mesures, the value of $P$ can drastically change,
-since $P$ is a vertex of our simplex. One solution is to regularize the problem to fall back on a set $U_\alpha(a, b)$
-strictly convex. This set is strictly contained in $U(a, b)$ and the optimal solution of this new problem won't be optimal for the initial problem, but will remain valid.
-Finally, the regularization that we will describe allows to obtain an
-interative algorithm of small complexity.
+We have reduced our initial problem into a linear programming
+formulation. Using a minimum flow solver, we can solve this linear optimization
+problem in $\mathcal{O}(n^3 \log (n))$. But the solution is not stable,
+as illustrated on the following figure. If we slightly modify our distance
+$D$ or if we change the source and destination measures, the value of $P$
+can drastically change, since $P$ is a vertex of our simplex. One solution
+is to regularize the problem to fall back on optimizing in a set $U_\alpha(a,
+b)$ strictly convex. This set is strictly contained in $U(a, b)$ and the
+optimal solution of this new problem will not necessarily be optimal for the
+initial problem, but will remain valid.
+
+We will introduce in the next section a regularization of the original
+problem, that will us to exhibit an iterative algorithm that converges toward
+a meaningful approximation of the minimizer, as well as mainly relying on
+matrix-product kind of linear algebrea and thus potentially implemented
+on GPUs.
+
 \begin{center}
 	\begin{tikzpicture}[scale=20, >={latex}]
 		\clip (0.2, -0.01) rectangle (0.51, 0.2);
@@ -265,11 +361,12 @@ interative algorithm of small complexity.
 	\end{tikzpicture}
 \end{center}
 
-\subs{Regularization}
+\subs{Entropic Regularization}
 
-The regularization that we choose consist in maximizing the entropy of the
-joint-probability $P$. We exhibit a new parameter $\gamma$ that controls
-the regularization and we obtain the following distance:
+The regularization that we highlight consists in solving the optimal
+transport problem, while maximizing the entropy of the joint-probability
+$P$. We therefore exhibit a new parameter $\gamma$ that parametrizes the
+regularization and we obtain the following distance.
 
 \DEF{
 	The \textbf{regularized Wasserstein distance} is defined as follows:
@@ -278,15 +375,23 @@ the regularization and we obtain the following distance:
 } 
 
 \paragraph{Remark}
-Recall that we can consider two random variables $X$ and $Y$ such that $X \sim \mu$, $Y \sim \nu$ and $X,Y \sim P$. The entropy of $P$ is maximum when $X$ and $Y$ are independant, \emph{ie.} when $P = ab^\trans$ and this maximum entropy is thus $H(\mu) + H(\nu)$. 
-The regularization therefore gives a matrix whose positive values are more
-distributed.
+Recall that we can consider two random variables $X$ and $Y$ such that $X \sim
+\mu$, $Y \sim \nu$ and consider their joint distribution $P$ such that $(X,Y)
+\sim P$. The entropy of $P$ is maximal when $X$ and $Y$ are independant,
+\emph{i.e.} when $P$ factorizes as $P = ab^\trans$ and this maximum entropy
+is given by $H(\mu) + H(\nu)$. The regularization therefore produces a
+matrix whose positive values are more distributed. In other words, we favor
+randomness of the transport map against determinism. The intuition behind
+this regularization comes from the observation that actual trafic patterns
+in networks are sparser than the theoretical solution obtained through
+a minimizer of the Kantorovich problem.
 
 \begin{center}
 	\includegraphics[scale=0.25]{reg_wass.png}
 \end{center}
 
-By strict convexity, there exist a unique matrix $P_\gamma$ that minimizes the distance:
+By a strict convexity argument, there exist a unique matrix $P_\gamma$
+minimizing the distance:
 $$ P_\gamma = \argmin_{P \in U(a, b)} \langle P, D \rangle - \gamma H(P) $$
 
 \PROP{
@@ -298,94 +403,128 @@ $$ P_\gamma = \argmin_{P \in U(a, b)} \langle P, D \rangle - \gamma H(P) $$
 
 \dem
 
-We write the new laplacian:
+We write the Laplacian of our new optimization problem.
 
-$$ L(P, \alpha, \beta) = \sum_{ij} \left( P_{ij} D_{ij} + \gamma P_{ij} \left( \log_2 P_{ij} - 1 \right) \right) + \alpha^\trans (a - P \mathbbm{1}_m) + \beta^\trans (b - P^\trans \mathbbm{1}_n) $$
-We compute the partial derivative with respect to $P_{ij}$:
-$$ \dfrac{\partial L}{\partial P_{ij}} = M_{ij} + \gamma \log_2 P_{ij} - \alpha_i - \beta_j $$
-The dual is the maximization of the minimum of the laplacian with respect
-to $P$. We must look for $P$ such that the partial derivative is equal to zero:
+$$ L(P, \alpha, \beta) = \sum_{ij} \left( P_{ij} D_{ij} + \gamma P_{ij} \left( \log_2 P_{ij} - 1 \right) \right) + \alpha^\trans (a - P \mathbf{1}_m) + \beta^\trans (b - P^\trans \mathbf{1}_n) $$
+
+We compute the partial derivative with respect to each $P_{ij}$
+$$ \dfrac{\partial L}{\partial P_{ij}} = D_{ij} + \gamma \log_2 P_{ij} - \alpha_i - \beta_j $$
+
+The dual problem is the maximization of the minimum of the Laplacian with
+respect to $P$. We must look for $P$ such that the partial derivative is
+equal to zero:
+
 $$ \dfrac{\partial L}{\partial P_{ij}} = 0 \Rightarrow P_{ij} = e^{\frac{\alpha_i}{\gamma}} e^{-\frac{D_{ij}}{\gamma}}  e^{\frac{\beta_j}{\gamma}} = u_i K_{ij} v_j $$
+
 \findem
 
 \paragraph{Sinkhorn}
-We have at our disposition an interative method to find this matrix $P_\gamma$. We use the condition $P_\gamma \in U(a,b)$:
+We can derive an iterative method to find this matrix $P_\gamma$. We use
+the condition $P_\gamma \in U(a,b)$:
+
 $$ P_\gamma \in U(a, b) \Leftrightarrow \left\{ \begin{array}{lrr}
 \text{diag}(u) K \text{diag}(v) \mathbbm{1}_m & = & a \\
 \text{diag}(v) K^\trans \text{diag}(u) \mathbbm{1}_n & = & b
 \end{array} \right. $$
+
 $$ P_\gamma \in U(a, b) \Leftrightarrow \left\{ \begin{array}{lrr}
 \text{diag}(u) K v & = & a \\
 \text{diag}(v) K^\trans u & = & b
 \end{array} \right. $$
-Then, we introduce $\odot$ the coefficient-wise product:
+
+Then, by introducing $\odot$ the coefficient-wise product, we can rewrite
+this as
+
 $$ P_\gamma \in U(a, b) \Leftrightarrow \left\{ \begin{array}{lrr}
 u \odot K v & = & a \\
 v \odot K^\trans u & = & b
 \end{array} \right. $$
+
+We end up considering a problem which was already studied in the numerical
+analysis community, and known as the \emph{matrix scaling problem}. From
+this formulation, rewritten as below using the coefficient-wise division
+$\oslash$, we can obtain an iterative algorithm performing Sinkhorn's updates.
+
 $$ P_\gamma \in U(a, b) \Leftrightarrow \left\{ \begin{array}{lrc}
-u & = & a \, / \, K v \\
-v & = & b \, / \, K^\trans u
+u & = & a \oslash K v \\
+v & = & b \oslash K^\trans u
 \end{array} \right. $$
-Sinkhorn's algorithm is thus the following: \\
+
+First we modify $u$ such that it satisfies the first equation, and we then
+use this value to modify the value of $v$ in order for it to satisfy the
+second. And we keep performing those updates until convergence. Sinkhorn's
+algorithm is thus the following: \\
+
 \begin{algorithm}
-	\caption{Sinkhorn}
-	\Repeat{convergence of $u, v$}{
-		$u \gets a \, / \, K v$ \;
-		$v \gets b \, / \, K^\trans u$ \;
-	}
+    \caption{Sinkhorn}
+    \Repeat{convergence of $u, v$}{
+        $u \gets a \oslash K v$ \;
+        $v \gets b \oslash K^\trans u$ \;
+    }
 \end{algorithm}
 
 \paragraph{Complexity}
-It has been proved that the algorithm converges in linear time. Moreover,
-an iteration is done in $\mathcal{O}(mn)$ but the computation can be
-parallelized. It is also possible to use grid convolution to obtain a
-complexity of $\mathcal{O}(n \log n)$.
+It has been proved that the algorithm is a linear convergence scheme. Moreover,
+an iteration is naively done in $\mathcal{O}(mn)$ but the computation can
+easily be parallelized, and especially performed on GPUs, the bottleneck of one
+update being the two matrix products $Kv$ and $K^\trans u$. It is also
+possible to use grid convolution to obtain a complexity of $\mathcal{O}(n
+\log n)$ for one update. More practical precise and exhaustive details can
+be found in Gabriel Peyré and Marco Cuturi's \emph{Computational Optimal
+Transport} \cite{Peyr2018ComputationalOT}.
 
 \paragraph{Dual}
-On peut aussi relever la formulation du dual avec régularisation :
+
+One can also notice the formulation of the dual thanks to the Proposition 1.
 $$ W_\gamma(\mu, \nu) = \max_{\alpha, \beta} \alpha^\trans a + \beta^\trans b - \gamma \left( e^{\alpha / \gamma} \right)^\trans K \left( e^{\beta / \gamma} \right) $$
 
-\paragraph{Lien avec la divergence KL}
-We write the kernel:
+\paragraph{Link with the KL divergence}
+Writing the kernel:
+
 $$ K_\gamma(i, j) = \exp \left( - \dfrac{d_{i, j}}{\gamma} \right) $$
-We obtain a new formulation of the entropic regularization with the KL-divergence:
+
+We obtain a new formulation of the entropic regularized problem using the
+KL-divergence
+
 $$ W_\gamma(\mu, \nu) = \min_{P \in U(a, b)} \gamma KL(P | K_\gamma) $$
 
 \sect{Optimal Transport and Machine Learning}
 
 Now that we have convinced ourselves of the good mathematical foundations
-of Optimal Transport, and of the fact that we can actually compute it, we
-can wonder how we can put this tool to great use in the setting of machine
-learning.
+of Optimal Transport, and of the fact that we can actually compute it to
+some extent, we can wonder how we can put this tool to use in the setting
+of machine learning.
 
-\subs{Compute the optimal transport of what?}
+\subs{What do we want to optimally transport ?}
 
-In the previous section we have seen that we have an algorithm to compute
-optimal transport (Sinkhorn's algorithm), and that this algorithm can be
-parallelized. We can take advantage of this fact to actually compute optimal
-transport among huge databases. One of the application of this is similarity
-based retrieval.
+In the previous section we have seen that we have at our disposal an
+algorithm to compute optimal transport maps (Sinkhorn's algorithm), and that
+this algorithm can be parallelized. We can take advantage of this fact to
+actually compute optimal transport among huge databases. Since computing
+optimal transport maps implies that we can compute a meaningful distance
+between two objects, as long as they can be interpreted as distributions,
+one of the application of this is similarity based retrieval.
 
 \paragraph{Color histograms}
 
-The color-histogram of an image is a tool that characterizes the color
-distribution of an image. Interestingly enough, it has been noticed that
-color-histogram are good tool to describe the similarity of two images. Since
-we now have at our disposal a tool to compute the distance between two
-distribution probability, we can apply it for histograms (that are really not
-that far from probability distribution, so much so that the algorithms and
-methods that we described earlier are relevant even without any fondamental
-change of setting). For a given image we can thus compute the distance between
-its histogram and the histogram of images comming from a bigger database:
-picking images that have the most similar histogram (in the sense of the
-Wasserstein distance) will therefore allow some form of similarity based
+The color-histogram of an image is a tool that characterizes the
+distribution of colors of an image. Interestingly enough, it has been noticed
+that color-histograms are a good tool to describe the similarity of two
+images. Since we now have a tool to compute the distance between two
+distribution probability, we can apply it to histograms (that are essentially
+discretized distribution, so much so that the algorithms and methods that
+we described earlier are relevant even without any fondamental change of
+setting). For a given image we can therefore compute the distance between its
+histogram and the histogram of images comming from a bigger database: picking
+images that have the most similar histogram (in the sense of the Wasserstein
+distance) will therefore allow to perform some form of similarity based
 image retrieval.
 
 \begin{center}
 	\includegraphics[scale=0.3]{image_histo.png}
     \captionof{figure}{Two images and their respective color-histograms,
-    embedded in $\R^2$}
+    embedded in $\R^2$ (Image from Marco Cuturi's Primer on Optimal Transport at
+    NIPS 2017)}
 \end{center}
 
 
@@ -394,66 +533,66 @@ image retrieval.
 We can apply the same technique as before, but instead of considering
 color-histograms, we can try to find some kind of distribution coming from
 other kind of documents, for example text documents. Some previous work,
-like the $\texttt{word2vec}$ framework allow for embedding of natural
-language words into an Euclidean space. A text therefore defines some sort
-of distribution of probability over this embedded space. As for images we
-can then compare this distribution to the distributions of other texts coming
-from a database (still in the sense of Wasserstein distance), and hopefully
-retrieve text dealing with similar topic, although there may be some
-significant differences in the actual vocabulary of those texts. We take
-advantage of the geometry of the distribution of probability in the embedded
-text, that tries to ensure that similar distributions are coming from texts
-dealing with similar topics.
+such as the $\texttt{word2vec}$ framework allows for the embedding of
+natural language words into an Euclidean space. A text (seen as a collection
+of words) therefore somehow defines a probability distribution over this
+embedded space. As for images we can then compare this distribution to
+the distributions of other texts coming from a database (still in the
+sense of Wasserstein distance), and hopefully retrieve text dealing with
+similar topics, although there may be some significant differences in the
+actual vocabulary of those texts. We can take advantage of the geometry of the
+distribution of probability in the embedded text space, that tries to ensure
+that similar distributions are coming from texts dealing with similar topics.
 
 \subs{Wassersteinization}
 
 We can go further than just using the Wasserstein to compute distance between
-distributions and use this as the main tool for the machine learning problems
-that we considered (we previously emphasized retrieval tasks) by introducing
-the Wasserstein distance on well studied machine learning settings and
-problems. We thus shed a new light on those problems, and the results are
-often fruitful. Some authors have coined the term $\textbf{Wassersteinization}$
-for this process.
+distributions and use this notion as distance as a main tool for already
+existing machine learning problems (we previously emphasized retrieval
+tasks for instance) by introducing the Wasserstein distance on well studied
+machine learning settings and problems. We therefore shed a new light on those
+problems, and the results are often fruitful. Some authors have coined the
+term $\textbf{Wassersteinization}$ to describe this process.
 
 \DEF{
 	$\textbf{Wassersteinization}$ is the process of introducing optimal
 	transport into an optimization or machine learning problem
 } 
 
-One way to approach this process is to introduce Wasserstein distance as a
-loss or fidelity term in optimization problems. This will motivate the interest
-toward the study of not only the very Wasserstein distance, but also of its
-derivative. More precisely we can show that we can computationaly evaluate
-the derivatives of the Wasserstein distance. Therefore we can deal with it a variety of optimization problems, including machine lerning related ones.
+One way to approach Wassersteinization is to introduce Wasserstein distance
+as a loss or fidelity term in optimization problems. This will motivate
+the interest toward not only the very Wasserstein distance, but also its
+derivative. More precisely one can show that we can computationaly evaluate
+the derivatives of the Wasserstein distance. Therefore we can deal with it
+in a variety of optimization problems, including machine lerning related ones.
 
 \paragraph{Averaging data}
 
 We can also see optimal transport as a normalization tool for data. One of
 the setting where this point of view as been proposed is the one of data
-averaging. We have already discussed earlier the benefits of Wasserstein's
-barycenters when compared to, say linear interpolations or $l_2$
-barycenters. One can see this put in good use in the case of data acquired
-through real world experiment. For instance, we can imagine a neurology
-setting, where the goal is to study the reaction of the brain of a patient
-to a certain precise stimulus. To do this we subjet the patient to the stimuli
+averaging. We have already discussed earlier the benefits of Wasserstein
+barycenters when compared to, say, linear interpolations or $l^2$
+barycenters. One can put this in good use in the case of data acquired through
+real world experiment. For instance, we can imagine a neuro-imagery setting,
+where the goal is to study the reaction of the brain of a patient to a
+certain precise stimulus. To do this we subjet the patient to the stimuli
 several time and we aim to submit the measures of the brain activity to
-a machine algorithm to study some of its features. But because of a whole
-lot of data acquisition hazards (noise, imprecisions in the measures, etc),
-the result will slighty differ from one experiment to another although it
-concerns the same stimulus. Therefore computing the average of the brain
-activity (that can easily seen to be analog to a probability distribution
-on the brain space), in the sense of Wasserstein barycenters can hopefully
-give access to more relevant data, without loosing the meaningful information.
-
+a machine algorithm to study some of its features. But because of the huge
+variety of data acquisition hazards (noise, imprecisions in the measures,
+patient variability etc), the result will slighty differ from one experiment
+to another although it concerns the same stimulus. Therefore computing the
+average of the brain activity (that can easily seen to be an analog of a
+probability distribution on the brain space) in the sense of Wasserstein
+barycenters can hopefully give access to more relevant data, without loosing
+the meaningful information.
 
 \begin{center}
     \centering
 	\includegraphics[scale=0.3]{brain_map.png}
-    \captionof{figure}{On the left the average brain map among several
-    experiments, on the right the brain activity map on a single experiment.}
+    \captionof{figure}{On the left the standard average brain map among
+    several experiments, on the right the Wasserstein average of the same
+    brain activity data. (Image from \cite{gramfort2015fast}) }
 \end{center}
-
-The same idea can be followed in other fields, like imagery for instance.
 
 \paragraph{Aggregating distributions}
 
@@ -462,33 +601,121 @@ use this idea of aggregating several distribution on the output of machine
 learning algorithms. Imagine that we want to use Bayesian learning (\emph{ie.}
 learn a probability distribution, in a Bayesian framework), on a dataset so
 huge that it cannot even fit on a single machine, and would it fit that the
-computation time would be out of control. We can imagine to split the dataset
-into $J$ different parts and distribute it amongst $J$ machines running the
-same learning algorithms. The result of this process is a set of $J$
+computation time would be out of reach. We can imagine to split the dataset
+into $J$ different parts and distribute it amongst $J$ machines running
+the same learning algorithms. The result of this process is a set of $J$
 distributions learned from each part of the dataset. Although they represent
-the same truth, because of the variation of the data those variation will
-be slightly different. Once again Wasserstein-averaging provides a useful
-tool to aggregate those distributions, into an hopefully meaningful one,
-closer the underlying real distribution. The good news is that this Wasserstein
+the same truth, because of the variation of the data those distributions will
+be slightly different. Once again Wasserstein-averaging provides a useful tool
+to aggregate those distributions into an hopefully meaningful one, closer
+to the underlying real distribution. The good news is that this Wasserstein
 posterior aggregation method comes with theoretic statistical guaranties!
 
-%\subs{Semi-suppervised learning setting}
+\paragraph{Semi-supervised learning and Wasserstein propagation}
 
-\paragraph{Semi-supervised learning setting}
-
-Wasserstein propagation: smooth a graph $(V,E)$ where an histogram is associated
+We are interested in smoothing a graph $(V,E)$ where an histogram is associated
 $\mu_v$ to each vertex $v$, with a susbset $S$ of the vertices that have a
-fixed histogram (known data).
-
-Solve the following optimization problem.
+fixed histogram (known data). To write this more formally, we want to solve
+the following optimization problem:
 
 $$
     \underset{\substack{\mu_i \in \mathcal{P}\left(\Omega\right) \\ \text{for }i \in V\setminus S}}\min \sum_{(e_1, e_2) \in E} W_2^2\left(\mu_{e_1}, \mu_{e_2}\right)
 $$
 
-\subs{Wasserstein PCA, Geodesics and Inverse problem}
+That is, we want to propagate the distribution known at certain vertices
+along the graph, with a "Wasserstein manner". It is a formulation of several
+semi-suppervised learning problems, where we only have at our disposal the
+structure of the graph, and information a small portion of the vertices. The
+distribution that we are handling here can for instance be probability
+distribution of belonging to each class, in a classification problem (which
+leads us to solving the "stereotypical" semi-suppervised problem that is
+vertice labelling), but we could consider broader classes of problems with
+this formalism.
 
-Since the space of distributions with the OT geometry has negative curvature,
-we generalize the PCA (ie. projecting on one dimension spaces) into Generalized
-Principal Geodesics. We then want to explain stuff out of what we found;
-eg. affaire Bonneel vs nounours
+\subs{Wasserstein PCA and Geodesics}
+
+The Wasserstein distance gives the space of probability measure a structure
+of geodesic metric space. Moreover, it has been shown that when $\Omega$
+is an Hilbert space, then the space of probability measures endowed
+with the Wasserstein distance has a Riemannian manifold structure (see
+\cite{ambrosio2008gradient}). Some authors such as \cite{seguy2015principal}
+have proposed to take advantage of this structure to define the notion of
+\textbf{Principal Geodesic Analysis} over this space, which aims to be an
+analog of the good old Principal Component Analysis with Euclidean metrics.
+
+The idea is that, as Ambrosio et al. shown in \cite{ambrosio2008gradient},
+we can characterize the geodesic path between two distributions, that is
+the shortest path with respect to the Wasserstein distance. We denote
+$(\rho_{\mu_1 \to \mu_2}^t)_t$ the geodesic path between $\mu_1$ and $\mu_2$,
+parametrized by $t$. Now, given a family of measures $\nu_1, \nu_2, \dots,
+\nu_N$, we would like to compute the pricipal geodesics of this family, that
+is find a set of geodesics between some measures (that also are to compute)
+that passes through the Wasserstein iso-barycenter of the $\nu_i$ and that
+are close to each of the $\nu_i$.
+
+\begin{center}
+    \begin{tikzpicture}[scale=0.7]
+        % the bottom left border of the surface
+        \path[name path=border1] (0,0) to[out=-10,in=150] (6,-2);
+        % the upper right border of the surface
+        \path[name path=border2] (12,1) to[out=150,in=-10] (5.5,3.2);
+        % a path for a line crossing both borders
+        \path[name path=redline] (0,-0.4) -- (12,1.5);
+        % intersections between the borders and the lines
+        \path[name intersections={of=border1 and redline,by={a}}];
+        \path[name intersections={of=border2 and redline,by={b}}];
+
+        % we draw the surface
+        \shade[left color=whiteGray!90,right color=darkWhite!90] 
+          (0,0) to[out=-10,in=150] (6,-2) -- (12,1) to[out=150,in=-10] (5.5,3.7) -- cycle;
+
+        \coordinate (mu1) at (3.5,0.5);
+        \coordinate (mu2) at (9,1);
+
+        \draw[blue, fill=blue] (mu1) circle (2pt);
+        \draw[blue] (mu1) node[left] {$\mu_1$};
+        \draw[blue, fill=blue] (mu2) circle (2pt);
+        \draw[blue] (mu2) node[right] {$\mu_2$};
+
+        \draw [name path=geodesic, blue] (mu1) to[out=-20, in=-150] node[below] {$\left(\rho_{\mu_1 \to \mu_2}^t\right)_t$} coordinate[pos=0.093] (geo1) coordinate[pos=0.2] (geo2) coordinate[pos=0.53] (geo3) coordinate[pos=0.85] (geo4) (mu2) ;
+
+        \coordinate (nu1) at (5,1.5);
+        \coordinate (nu2) at (6.5,0.4);
+        \coordinate (nu3) at (8,-0.5);
+        \coordinate (nu4) at (4,0.2);
+
+        \draw[red, dashed] (nu4) to (geo1);
+        \draw[red, dashed] (nu1) to[out=-80, in=60] (geo2);
+        \draw[red, dashed] (nu2) to[out=-80, in=70] (geo3);
+        \draw[red, dashed] (nu3) to[out=70, in=-80] (geo4);
+        \draw[red, fill=red] (nu1) circle (2pt) node[above] {$\nu_1$};
+        \draw[red, fill=red] (nu2) circle (2pt) node[above] {$\nu_2$};
+        \draw[red, fill=red] (nu3) circle (2pt) node[below] {$\nu_3$};
+        \draw[red, fill=red] (nu4) circle (2pt) node[below] {$\nu_4$};
+
+    \end{tikzpicture}
+\end{center}
+
+We can formalize this idea more precisely as follows, using for example the
+second order Wasserstein distance $W_2^2$.
+
+$$
+    \min_{\mu_1, \mu_2 \in \mathcal{P}(\Omega)}
+        \sum_{i=1}^N \min_t W_2^2\left(\rho_{\mu_1 \to \mu_2}^t, \nu_i\right)
+$$
+
+Since a couple of measures $(\mu_1, \mu_2)$ entirely characterizes a
+geodesic path, our optimization is performed over the space of probability
+measures over $\Omega$. This problem can be solved using the methods that
+we presented earlier in our \emph{How to compute Optimal Transport} section,
+and some projected gradient descent because of the overall non-convexity of
+this problem. We can iterate this process to gradually explain more and more
+features of our distributions.
+
+\begin{center}
+    \centering
+	\includegraphics[scale=0.3]{ims/MNIST_PCA.png}
+    \captionof{figure}{Principal Geodesic Components obtained from a subset
+    of $2000$ images of the MNIST database, containing an equal proportion
+    of \texttt{2} and \texttt{4}.(Image from \cite{seguy2015principal}) }
+\end{center}

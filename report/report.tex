@@ -37,6 +37,8 @@
 \usetikzlibrary{arrows.meta}
 \usetikzlibrary{arrows}
 \usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{intersections}
+
 \mathtoolsset{showonlyrefs=true}
 
 \addto\extrasenglish{%
@@ -122,9 +124,9 @@
 \newcommand{\findem}{\hfill $\blacksquare$}
 \newcommand{\exe}{\paragraph{\textit{\textcolor{green}{Exemple}}}}
 
-\newcommand{\N}{\mathbb{N}}
+\newcommand{\N}{\mathbf{N}}
 \newcommand{\trans}{\mathsf{T}}
-\newcommand{\R}{\mathbb{R}}
+\newcommand{\R}{\mathbf{R}}
 \newcommand{\Pp}{\mathbb{P}}
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\X}{\mathcal{X}}
@@ -140,13 +142,7 @@
 \author{
 	Yoann Coudert--Osmont
 	\and
-	Némo Fournier
-	\and
-	Jérémy Petithomme
-	\and
-	Victor Mercklé
-	\and
-	Charles Gassot
+	Nemo Fournier
 }
 \date\today
 
@@ -164,7 +160,7 @@
 	\newpage
 	\appendix
 	
-	\bibliographystyle{plain}
+	\bibliographystyle{alpha}
 	\bibliography{bib.bib}
 	
 \end{document}
